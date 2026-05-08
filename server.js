@@ -369,6 +369,115 @@ const server = http.createServer(async (req, res) => {
   }
 
 
+
+  // ── 文件上传接口 ──
+  if (url.pathname === '/api/upload' && req.method === 'POST') {
+    const boundary = req.headers['content-type'].split('boundary=')[1];
+    if (!boundary) { res.writeHead(400); res.end(JSON.stringify({ok:false,error:'no boundary'})); return; }
+    let body = [];
+    req.on('data', chunk => body.push(chunk));
+    req.on('end', () => {
+      try {
+        const buf = Buffer.concat(body);
+        const boundaryBuf = Buffer.from('--' + boundary);
+        const parts = [];
+        let start = 0;
+        for (let i = 0; i < buf.length; i++) {
+          if (buf.slice(i, i + boundaryBuf.length).equals(boundaryBuf)) {
+            if (start > 0) parts.push(buf.slice(start, i - 2));
+            start = i + boundaryBuf.length + 2;
+          }
+        }
+        if (parts.length === 0) { res.writeHead(400); res.end(JSON.stringify({ok:false,error:'no parts'})); return; }
+        const part = parts[0];
+        const headerEnd = part.indexOf('\r\n\r\n');
+        const header = part.slice(0, headerEnd).toString();
+        const fileData = part.slice(headerEnd + 4);
+        const nameMatch = header.match(/filename="(.+?)"/);
+        const fileName = nameMatch ? nameMatch[1] : 'upload_' + Date.now();
+        const uploadDir = '/tmp/n1_uploads';
+        if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, {recursive:true});
+        const filePath = uploadDir + '/' + fileName;
+        fs.writeFileSync(filePath, fileData);
+        const audit = require('./audit');
+        audit.writeAudit({operation:'UPLOAD', fileSize:fileData.length, modelName:'pending', uploaded:false, durationMs:0});
+        res.writeHead(200, {'Content-Type':'application/json'});
+        res.end(JSON.stringify({ok:true, path:filePath, name:fileName, size:fileData.length}));
+      } catch(e) {
+        res.writeHead(500); res.end(JSON.stringify({ok:false,error:e.message}));
+      }
+    });
+    return;
+  }
+
+  // ── OCR处理接口 ──
+  if (url.pathname === '/api/ocr' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', async () => {
+      try {
+        const {filePath, fileName, task, model} = JSON.parse(body);
+        const start = Date.now();
+        const fileData = fs.readFileSync(filePath);
+        const base64 = fileData.toString('base64');
+        const ext = (fileName||'').split('.').pop().toLowerCase();
+        const mimeMap = {pdf:'application/pdf',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png'};
+        const mime = mimeMap[ext] || 'image/jpeg';
+        const taskPrompts = {
+          ocr: '这是一张发票或收据图片，请识别所有文字，提取：开票日期、金额、税额、购买方、销售方、品目，以JSON数组返回，每项格式：{date,amount,tax,buyer,seller,item}',
+          flow: '这是银行流水截图或PDF，请识别所有交易记录，每条格式：{date,type,amount,balance,counterpart,note}，以JSON数组返回',
+          contract: '这是合同文件，请提取：合同名称、甲方、乙方、金额、签订日期、主要条款（列表）、风险点（列表），以JSON返回',
+          report: '这是财务报表，请提取关键财务数据，以JSON返回'
+        };
+        const prompt = taskPrompts[task] || taskPrompts.ocr;
+        const result = await callBridge('/api/chat', {
+          message: prompt,
+          agentId: 'shangye',
+          attachments: [{type: mime, data: base64, name: fileName}]
+        });
+        const durationMs = Date.now() - start;
+        const audit = require('./audit');
+        audit.writeAudit({operation: task.toUpperCase()+'_OCR', fileSize: fileData.length, modelName: model||'qwen3:14b', uploaded: false, durationMs});
+        res.writeHead(200, {'Content-Type':'application/json'});
+        res.end(JSON.stringify({ok:true, result: result.reply || '', durationMs}));
+      } catch(e) {
+        res.writeHead(500); res.end(JSON.stringify({ok:false,error:e.message}));
+      }
+    });
+    return;
+  }
+
+
+  // ── 任务启动接口 ──
+  if (url.pathname === '/api/task-start' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const { filePath, fileName, fileSize } = JSON.parse(body);
+        const tm = require('./task-manager');
+        const id = tm.createTask({ localPath: filePath, name: fileName, size: fileSize });
+        tm.runTask(id);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, taskId: id }));
+      } catch(e) {
+        res.writeHead(500); res.end(JSON.stringify({ ok: false, error: e.message }));
+      }
+    });
+    return;
+  }
+
+  // ── 任务状态查询接口 ──
+  if (url.pathname === '/api/task-status' && req.method === 'GET') {
+    const id = url.searchParams.get('id');
+    const tm = require('./task-manager');
+    const task = tm.getTask(id);
+    if (!task) { res.writeHead(404); res.end(JSON.stringify({ ok: false, error: 'not found' })); return; }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, task }));
+    return;
+  }
+
   // ── 面板页面 ──
   if (url.pathname === '/panel') {
     serveFile(res, path.join(__dirname, 'n1_panel.html'), 'text/html; charset=utf-8');
