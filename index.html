@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>极知AI · 智能助手</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    color: #fff;
+    font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    width: 100%;
+    padding: 40px;
+  }
+  .left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 500px;
+  }
+  .badge {
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    color: #a5b4fc;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+  }
+  h1 {
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 18px;
+    letter-spacing: -1px;
+  }
+  h1 span {
+    background: linear-gradient(135deg, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    font-size: 17px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.7);
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #818cf8;
+    flex-shrink: 0;
+  }
+  .plans {
+    display: flex;
+    gap: 12px;
+  }
+  .plan {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 14px 20px;
+    text-align: center;
+    min-width: 130px;
+  }
+  .plan.highlight {
+    background: rgba(99,102,241,0.1);
+    border-color: rgba(99,102,241,0.35);
+  }
+  .plan .price {
+    font-size: 26px;
+    font-weight: 700;
+    color: #a5b4fc;
+  }
+  .plan .count {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    margin: 4px 0 2px;
+  }
+  .plan .tag {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+  }
+  .right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .qr-wrapper {
+    background: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    position: relative;
+  }
+  #qrcode canvas, #qrcode img {
+    display: block;
+    border-radius: 8px;
+  }
+  .pulse {
+    position: absolute;
+    top: -4px; right: -4px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #4ade80;
+  }
+  .pulse::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid #4ade80;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+  .qr-label {
+    text-align: center;
+  }
+  .qr-label p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 4px;
+  }
+  .qr-label strong {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+  }
+  .device-id {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 2px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="left">
+    <div class="badge">AI POWERED · 极知AI</div>
+    <h1>您的专属<br><span>AI智能助手</span></h1>
+    <p class="subtitle">微信扫码，即刻开始对话。<br>无需下载任何APP，随时随地使用。</p>
+    <div class="features">
+      <div class="feature"><div class="dot"></div>支持中文等多语言，全天候在线</div>
+      <div class="feature"><div class="dot"></div>接入顶尖AI大模型，智能精准</div>
+      <div class="feature"><div class="dot"></div>对话私密安全，数据不外泄</div>
+      <div class="feature"><div class="dot"></div>按次计费，按需充值，灵活实惠</div>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <div class="price">¥19</div>
+        <div class="count">500次对话</div>
+        <div class="tag">基础套餐</div>
+      </div>
+      <div class="plan highlight">
+        <div class="price">¥49</div>
+        <div class="count">2000次对话</div>
+        <div class="tag">超值套餐</div>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="qr-wrapper">
+      <div class="pulse"></div>
+      <div id="qrcode"></div>
+    </div>
+    <div class="qr-label">
+      <p>微信扫码开始聊天</p>
+      <strong>WECHAT SCAN TO START</strong>
+    </div>
+    <div class="device-id" id="device-id">DEVICE · --</div>
+  </div>
+</div>
+<script>
+  const deviceId = 'JZ-' + Math.random().toString(36).substr(2,6).toUpperCase();
+  document.getElementById('device-id').textContent = 'DEVICE · ' + deviceId;
+  const chatUrl = window.location.origin + '/chat?device=' + deviceId;
+  new QRCode(document.getElementById('qrcode'), {
+    text: chatUrl,
+    width: 200,
+    height: 200,
+    colorDark: '#000',
+    colorLight: '#fff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+</script>
+</body>
+</html>

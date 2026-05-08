@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>极知AI</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  background: #0f0f14;
+  color: #fff;
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.header {
+  padding: 12px 16px 8px;
+  background: #0f0f14;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; color: #fff;
+}
+.brand-name { font-size: 15px; font-weight: 600; }
+.plan-badge {
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.3);
+  color: #a5b4fc;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.skills {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.skills::-webkit-scrollbar { display: none; }
+.skill-btn {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.skill-btn.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 600;
+}
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: none;
+}
+.messages::-webkit-scrollbar { display: none; }
+.msg {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.msg.ai {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.08);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+.msg.user {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+.dot-flashing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+.dot-flashing span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  animation: bounce 1.2s infinite;
+}
+.dot-flashing span:nth-child(2) { animation-delay: 0.2s; }
+.dot-flashing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-5px); opacity: 1; }
+}
+.skill-intro {
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 14px;
+  padding: 14px;
+}
+.skill-intro h3 { font-size: 14px; font-weight: 600; color: #a5b4fc; margin-bottom: 6px; }
+.skill-intro p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+.quick-prompts { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.quick-prompt {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+.upgrade-banner {
+  margin: 0 12px 8px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.12));
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.upgrade-text { font-size: 12px; color: rgba(255,255,255,0.5); }
+.upgrade-text strong { color: #a5b4fc; display: block; font-size: 13px; margin-bottom: 1px; }
+.upgrade-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.input-area {
+  padding: 8px 12px;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  background: #0f0f14;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+textarea {
+  flex: 1;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 10px 16px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  resize: none;
+  max-height: 100px;
+  line-height: 1.4;
+  font-family: inherit;
+}
+textarea::placeholder { color: rgba(255,255,255,0.3); }
+textarea:focus { border-color: rgba(99,102,241,0.5); }
+.send-btn {
+  width: 40px; height: 40px; flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.send-btn:disabled { opacity: 0.4; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-icon">AI</div>
+      <div class="brand-name">极知AI</div>
+    </div>
+    <div class="plan-badge" onclick="showUpgrade()">开通服务</div>
+  </div>
+  <div class="skills">
+    <button class="skill-btn active" onclick="selectSkill(this,'chat')">💬 自由对话</button>
+    <button class="skill-btn" onclick="selectSkill(this,'accounting')">📊 财务做账</button>
+    <button class="skill-btn" onclick="selectSkill(this,'excel')">📋 表格分析</button>
+    <button class="skill-btn" onclick="selectSkill(this,'ppt')">🎯 PPT策划</button>
+    <button class="skill-btn" onclick="selectSkill(this,'ecommerce')">🛒 跨境电商</button>
+    <button class="skill-btn" onclick="selectSkill(this,'legal')">⚖️ 合同法律</button>
+  </div>
+</div>
+
+<div class="messages" id="messages">
+  <div class="skill-intro" id="skill-intro">
+    <h3>💬 自由对话模式</h3>
+    <p>你好！我是你的 AI 助手，可以帮你回答问题、分析信息、撰写内容。无需翻墙，扫码即用。</p>
+    <div class="quick-prompts">
+      <button class="quick-prompt" onclick="sendQuick(this.textContent)">帮我写一封商务邮件</button>
+      <button class="quick-prompt" onclick="sendQuick(this.textContent)">分析一下跨境电商的市场机会</button>
+      <button class="quick-prompt" onclick="sendQuick(this.textContent)">帮我制定一个工作计划</button>
+    </div>
+  </div>
+</div>
+
+<div class="upgrade-banner">
+  <div class="upgrade-text">
+    <strong>开通极知AI，解锁全部功能</strong>
+    按次计费，用完续费，额度叠加不清零
+  </div>
+  <button class="upgrade-btn" onclick="showUpgrade()">¥19起</button>
+</div>
+
+<div class="input-area">
+  <textarea id="input" placeholder="输入你的问题..." rows="1" oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+  <button class="send-btn" id="send-btn" onclick="sendMsg()">↑</button>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const deviceId = params.get('device') || 'TV-000';
+const API_URL = '/api/chat';
+
+const skills = {
+  chat: {
+    name: '💬 自由对话模式',
+    desc: '你好！我是你的 AI 助手，可以帮你回答问题、分析信息、撰写内容。无需翻墙，扫码即用。',
+    prompts: ['帮我写一封商务邮件', '分析一下跨境电商的市场机会', '帮我制定一个工作计划'],
+    system: '你是一个专业的AI助手，用中文回答，简洁专业，回答不超过300字。'
+  },
+  accounting: {
+    name: '📊 财务做账模式',
+    desc: '专业财务助手，帮你处理账目、生成报表、分析财务数据、解答税务问题。',
+    prompts: ['帮我做一份月度收支明细表', '解释一下增值税的计算方法', '帮我分析这笔账目是否合规'],
+    system: '你是一个专业的财务会计助手，擅长做账、报税、财务分析。用中文回答，提供专业实用的财务建议，可以给出表格格式或计算步骤。回答简洁，不超过400字。'
+  },
+  excel: {
+    name: '📋 表格分析模式',
+    desc: '帮你设计表格结构、分析数据、生成公式、整理信息，让数据更清晰。',
+    prompts: ['帮我设计一个销售数据追踪表', '统计月销售额的Excel公式怎么写', '帮我整理以下数据并生成表格'],
+    system: '你是一个Excel和数据分析专家，擅长设计表格、编写公式、分析数据。用中文回答，提供可直接使用的表格结构和公式，回答简洁实用。'
+  },
+  ppt: {
+    name: '🎯 PPT策划模式',
+    desc: '帮你规划PPT结构、撰写演讲内容、设计每页要点，让你的演示更专业有力。',
+    prompts: ['帮我策划一个商业计划书PPT', '给我一个产品发布会PPT的框架', '帮我优化这页PPT的文案'],
+    system: '你是一个专业的PPT策划和商业演示专家，擅长规划演示结构、撰写有说服力的内容。用中文回答，给出清晰的页面结构和内容要点，格式清晰易读。'
+  },
+  ecommerce: {
+    name: '🛒 跨境电商模式',
+    desc: '专注跨境电商，帮你选品、写Listing、分析市场、优化eBay/Amazon/Shopify运营。',
+    prompts: ['帮我写一个产品的英文Listing', '分析一下烟具类目的市场竞争', '帮我制定eBay新店铺运营策略'],
+    system: '你是一个跨境电商专家，熟悉eBay、Amazon、Shopify等平台，擅长选品分析、Listing优化、运营策略。用中文回答，提供实操性强的建议，回答简洁实用。'
+  },
+  legal: {
+    name: '⚖️ 合同法律模式',
+    desc: '帮你审查合同、解答法律问题、起草协议，保护你的商业权益。',
+    prompts: ['帮我审查这份合同有没有风险', '帮我起草一份保密协议模板', '这个合同条款对我方有什么影响'],
+    system: '你是一个法律助手，擅长合同审查、法律咨询、协议起草。用中文回答，提供专业的法律分析。注意：建议仅供参考，重要事项请咨询专业律师。'
+  }
+};
+
+let currentSkill = 'chat';
+let isLoading = false;
+
+function selectSkill(btn, skill) {
+  document.querySelectorAll('.skill-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSkill = skill;
+  const s = skills[skill];
+  const intro = document.getElementById('skill-intro');
+  intro.innerHTML = '<h3>' + s.name + '</h3><p>' + s.desc + '</p><div class="quick-prompts">' +
+    s.prompts.map(function(p) { return '<button class="quick-prompt" onclick="sendQuick(\'' + p.replace(/'/g,"&#39;") + '\')">' + p + '</button>'; }).join('') +
+    '</div>';
+  intro.style.display = 'block';
+}
+
+function sendQuick(text) {
+  document.getElementById('input').value = text;
+  sendMsg();
+}
+
+function showUpgrade() {
+  const old = document.getElementById('pay-modal');
+  if (old) old.remove();
+  const modal = document.createElement('div');
+  modal.id = 'pay-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;display:flex;align-items:flex-end;justify-content:center';
+  modal.innerHTML = `
+    <div style="background:#1a1a2e;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px;padding-bottom:max(24px,env(safe-area-inset-bottom))">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:6px">开通极知AI</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.4)">按次计费 · 用完续费 · 额度叠加不清零</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:20px">
+        <div onclick="selectPlan('a',this)" id="plan-a" style="flex:1;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:14px;padding:14px;text-align:center;cursor:pointer">
+          <div style="font-size:22px;font-weight:800;color:#a5b4fc">¥19</div>
+          <div style="font-size:13px;color:#fff;margin:4px 0">体验包</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4)">500次对话额度</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px">轻度约20-30天用完</div>
+        </div>
+        <div onclick="selectPlan('b',this)" id="plan-b" style="flex:1;background:rgba(99,102,241,0.2);border:2px solid #6366f1;border-radius:14px;padding:14px;text-align:center;cursor:pointer;position:relative">
+          <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#6366f1;color:#fff;font-size:10px;padding:2px 10px;border-radius:10px">推荐</div>
+          <div style="font-size:22px;font-weight:800;color:#a5b4fc">¥49</div>
+          <div style="font-size:13px;color:#fff;margin:4px 0">标准包</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4)">2000次对话额度</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px">轻度约2-3个月用完</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-bottom:16px">
+        <img src="/qrcodes/alipay_qr.jpg" style="width:180px;height:180px;border-radius:12px;object-fit:cover">
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px">支付宝扫码付款</div>
+        <div id="pay-tip" style="font-size:12px;color:#a5b4fc;margin-top:4px">付款备注【标准包】¥49</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:6px">付款后截图发给客服，秒激活 ✅</div>
+      </div>
+      <button onclick="document.getElementById('pay-modal').remove()" style="width:100%;padding:12px;background:rgba(255,255,255,0.08);border:none;border-radius:12px;color:rgba(255,255,255,0.5);font-size:14px;cursor:pointer">关闭</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.onclick = function(e){ if(e.target===modal) modal.remove(); };
+}
+
+function selectPlan(id, el) {
+  ['plan-a','plan-b'].forEach(function(pid){
+    const p = document.getElementById(pid);
+    if(p){ p.style.border='1px solid rgba(99,102,241,0.3)'; p.style.background='rgba(99,102,241,0.1)'; }
+  });
+  el.style.border = '2px solid #6366f1';
+  el.style.background = 'rgba(99,102,241,0.2)';
+  const tip = document.getElementById('pay-tip');
+  if(tip) tip.textContent = id==='a' ? '付款备注【体验包】¥19' : '付款备注【标准包】¥49';
+}
+
+async function sendMsg() {
+  if (isLoading) return;
+  const input = document.getElementById('input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  autoResize(input);
+  document.getElementById('skill-intro').style.display = 'none';
+  addMsg(text, 'user');
+  isLoading = true;
+  document.getElementById('send-btn').disabled = true;
+  const loading = addLoadingMsg();
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ message: text, device_id: deviceId, system: skills[currentSkill].system })
+    });
+    const data = await res.json();
+    loading.remove();
+    addMsg(data.reply || '抱歉，请重试', 'ai');
+  } catch(e) {
+    loading.remove();
+    addMsg('连接失败，请重试', 'ai');
+  }
+  isLoading = false;
+  document.getElementById('send-btn').disabled = false;
+}
+
+function addMsg(text, cls) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + cls;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function addLoadingMsg() {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg ai';
+  div.innerHTML = '<div class="dot-flashing"><span></span><span></span><span></span></div><span style="font-size:12px;color:#999;margin-left:8px;">AI思考中，请稍候...</span>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+}
+</script>
+</body>
+</html>

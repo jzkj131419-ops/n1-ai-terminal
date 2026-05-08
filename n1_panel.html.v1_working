@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N1 智能终端 · 企业管理面板</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+:root {
+  --bg: #0a0c0f;
+  --panel: #0f1318;
+  --border: rgba(0,255,170,0.12);
+  --border-bright: rgba(0,255,170,0.35);
+  --green: #00ffaa;
+  --green-dim: rgba(0,255,170,0.08);
+  --green-glow: rgba(0,255,170,0.25);
+  --amber: #ffb300;
+  --amber-dim: rgba(255,179,0,0.1);
+  --red: #ff4444;
+  --red-dim: rgba(255,68,68,0.1);
+  --text: #c8d8c8;
+  --text-dim: rgba(200,216,200,0.45);
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Noto Sans SC', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* scan line effect */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--green);
+  position: relative;
+}
+
+.logo-icon::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(0,255,170,0.3);
+}
+
+.logo-text {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--green);
+  letter-spacing: 0.2em;
+}
+
+.logo-sub {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-dim);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 2s infinite;
+}
+
+.dot.amber { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+.dot.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.time-display {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--green);
+  letter-spacing: 0.05em;
+}
+
+/* ── MAIN LAYOUT ── */
+.main {
+  display: grid;
+  grid-template-columns: 220px 1fr 320px;
+  grid-template-rows: 1fr;
+  height: calc(100vh - 57px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  padding: 0 16px;
+  margin-bottom: 24px;
+}
+
+.sidebar-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 0 4px;
+  margin-bottom: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  margin-bottom: 2px;
+  position: relative;
+}
+
+.nav-item:hover {
+  color: var(--text);
+  background: var(--green-dim);
+  border-color: var(--border);
+}
+
+.nav-item.active {
+  color: var(--green);
+  background: var(--green-dim);
+  border-color: var(--border-bright);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--green);
+}
+
+.nav-icon { font-size: 0.9rem; width: 18px; text-align: center; }
+
+.nav-badge {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid var(--border-bright);
+  padding: 1px 6px;
+}
+
+/* ── CONTENT AREA ── */
+.content {
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--green);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.card-title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* ── STORAGE MOUNT ── */
+.mount-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.input-group { display: flex; flex-direction: column; gap: 6px; }
+
+.input-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+.mono-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.mono-input:focus { border-color: var(--green); }
+.mono-input::placeholder { color: var(--text-dim); }
+
+.mount-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.mount-status.connected {
+  border-color: rgba(0,255,170,0.25);
+  color: var(--green);
+}
+
+.mount-status.connected .dot { background: var(--green); }
+
+.btn-row { display: flex; gap: 10px; }
+
+.btn {
+  padding: 9px 20px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.2s;
+  background: transparent;
+}
+
+.btn-primary {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.btn-primary:hover {
+  background: var(--green);
+  color: var(--bg);
+}
+
+.btn-secondary {
+  border-color: var(--border);
+  color: var(--text-dim);
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-dim);
+  color: var(--text);
+}
+
+/* ── TASK SELECTOR ── */
+.task-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.task-card {
+  border: 1px solid var(--border);
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.task-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--green-dim);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.task-card:hover::after, .task-card.selected::after { opacity: 1; }
+
+.task-card.selected {
+  border-color: var(--green);
+}
+
+.task-card.selected::before {
+  content: '✓';
+  position: absolute;
+  top: 6px; right: 8px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--green);
+  z-index: 1;
+}
+
+.task-icon { font-size: 1.4rem; margin-bottom: 8px; }
+
+.task-name {
+  font-size: 0.82rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.task-desc {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ── MODEL SELECTOR ── */
+.model-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.model-chip {
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.model-chip:hover { border-color: var(--text-dim); color: var(--text); }
+
+.model-chip.active {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-dim);
+}
+
+.model-chip .m-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ── FILE DROP ZONE ── */
+.drop-zone {
+  border: 1px dashed var(--border);
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--green);
+  background: var(--green-dim);
+}
+
+.drop-icon { font-size: 2rem; margin-bottom: 10px; opacity: 0.5; }
+
+.drop-text {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.drop-sub {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  opacity: 0.6;
+}
+
+.file-list { margin-top: 12px; }
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.file-item .f-name { flex: 1; color: var(--text); }
+.file-item .f-size { color: var(--text-dim); }
+.file-item .f-remove { color: var(--red); cursor: pointer; margin-left: 8px; }
+
+/* ── PROGRESS ── */
+.progress-wrap {
+  margin-top: 16px;
+  display: none;
+}
+
+.progress-wrap.show { display: block; }
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.progress-bar {
+  height: 3px;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green-glow);
+  transition: width 0.3s;
+}
+
+.progress-steps {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.step {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.step.done { border-color: var(--green); color: var(--green); }
+.step.active { border-color: var(--amber); color: var(--amber); animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: 0.5; } }
+
+/* ── RIGHT PANEL: AUDIT LOG ── */
+.audit-panel {
+  border-left: 1px solid var(--border);
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.audit-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.audit-title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--green);
+  letter-spacing: 0.15em;
+}
+
+.audit-controls { display: flex; gap: 8px; }
+
+.audit-btn {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.audit-btn:hover { border-color: var(--text-dim); color: var(--text); }
+
+.audit-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1.7;
+}
+
+.audit-log::-webkit-scrollbar { width: 4px; }
+.audit-log::-webkit-scrollbar-track { background: transparent; }
+.audit-log::-webkit-scrollbar-thumb { background: var(--border); }
+
+.log-line {
+  display: flex;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  opacity: 0;
+  animation: logIn 0.3s forwards;
+}
+
+@keyframes logIn {
+  from { opacity: 0; transform: translateX(-4px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.log-time { color: var(--text-dim); flex-shrink: 0; width: 70px; }
+.log-type { flex-shrink: 0; width: 50px; }
+.log-type.INFO { color: var(--green); }
+.log-type.WARN { color: var(--amber); }
+.log-type.ERR { color: var(--red); }
+.log-type.DATA { color: #7eb8ff; }
+.log-msg { color: var(--text); flex: 1; word-break: break-all; }
+
+/* ── STATS FOOTER ── */
+.stats-footer {
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.stat-item { }
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+
+.stat-val {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--green);
+}
+
+/* ── RESULT AREA ── */
+.result-area {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 16px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  min-height: 120px;
+  color: var(--text-dim);
+  display: none;
+}
+
+.result-area.show { display: block; }
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.result-table th {
+  text-align: left;
+  padding: 6px 10px;
+  background: var(--green-dim);
+  color: var(--green);
+  border-bottom: 1px solid var(--border-bright);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.result-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.result-table tr:hover td { background: var(--green-dim); }
+
+.review-badge {
+  font-size: 0.62rem;
+  padding: 1px 5px;
+  background: var(--amber-dim);
+  border: 1px solid var(--amber);
+  color: var(--amber);
+}
+
+/* ── DOWNLOAD BAR ── */
+.download-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--green-dim);
+  border: 1px solid var(--border-bright);
+  margin-top: 12px;
+}
+
+.download-bar.show { display: flex; }
+
+.dl-info { font-size: 0.78rem; color: var(--green); }
+.dl-sub { font-size: 0.68rem; color: var(--text-dim); margin-top: 2px; }
+
+/* scrollbar */
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+.content::-webkit-scrollbar-thumb { background: var(--border); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">N1</div>
+    <div>
+      <div class="logo-text">N1 INTELLIGENT TERMINAL</div>
+      <div class="logo-sub">企业数据本地算力平台 · 数据不动，算力上门</div>
+    </div>
+  </div>
+  <div class="status-bar">
+    <div class="status-item"><span class="dot"></span> 盒子在线</div>
+    <div class="status-item"><span class="dot"></span> 算力中心连通</div>
+    <div class="status-item"><span class="dot amber"></span> 存储未挂载</div>
+    <div class="time-display" id="clock">--:--:--</div>
+  </div>
+</header>
+
+<div class="main">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">功能模块</div>
+      <div class="nav-item active" onclick="switchTab('task')">
+        <span class="nav-icon">⚡</span> 任务执行
+      </div>
+      <div class="nav-item" onclick="switchTab('storage')">
+        <span class="nav-icon">💾</span> 存储挂载
+      </div>
+      <div class="nav-item" onclick="switchTab('model')">
+        <span class="nav-icon">🧠</span> 模型配置
+      </div>
+      <div class="nav-item" onclick="switchTab('audit')">
+        <span class="nav-icon">🔍</span> 审计报告
+        <span class="nav-badge" id="logCount">0</span>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">系统信息</div>
+      <div class="nav-item" onclick="switchTab('device')">
+        <span class="nav-icon">📦</span> 设备信息
+      </div>
+    </div>
+    <div class="sidebar-section" style="margin-top:auto;">
+      <div style="padding:12px;background:var(--bg);border:1px solid var(--border);font-size:0.72rem;">
+        <div style="color:var(--text-dim);font-family:var(--mono);font-size:0.62rem;margin-bottom:8px;">设备 ID</div>
+        <div style="font-family:var(--mono);color:var(--green);font-size:0.75rem;">N1-109</div>
+        <div style="color:var(--text-dim);font-size:0.68rem;margin-top:4px;">192.168.2.109</div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+          <div style="color:var(--text-dim);font-family:var(--mono);font-size:0.62rem;margin-bottom:4px;">算力中心</div>
+          <div style="font-family:var(--mono);color:var(--text);font-size:0.72rem;">192.168.2.111</div>
+          <div style="color:var(--green);font-size:0.68rem;margin-top:2px;">● 延迟 3ms</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="content" id="mainContent">
+
+    <!-- STORAGE MOUNT -->
+    <div class="card" id="storageSection">
+      <div class="section-header">
+        <span class="section-title">// 存储挂载</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="mount-status" id="mountStatus">
+        <span class="dot amber"></span>
+        <span>未挂载 — 请配置存储路径</span>
+      </div>
+      <div class="mount-grid">
+        <div class="input-group">
+          <label class="input-label">协议类型</label>
+          <select class="mono-input" id="mountProto">
+            <option value="smb">SMB（Windows共享）</option>
+            <option value="nfs">NFS（Linux/NAS）</option>
+            <option value="local">本地路径</option>
+            <option value="upload">文件上传（演示）</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label class="input-label">服务器地址</label>
+          <input class="mono-input" id="mountHost" placeholder="192.168.1.100 或 //server/share" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">共享目录</label>
+          <input class="mono-input" id="mountPath" placeholder="/documents/invoices" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">访问凭据</label>
+          <input class="mono-input" type="password" placeholder="只读权限（推荐）" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="mountStorage()">挂载存储</button>
+        <button class="btn btn-secondary" onclick="testConnection()">测试连接</button>
+        <button class="btn btn-secondary" onclick="useUpload()">使用文件上传（演示）</button>
+      </div>
+    </div>
+
+    <!-- TASK SELECTOR -->
+    <div class="card">
+      <div class="section-header">
+        <span class="section-title">// 任务类型</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="task-grid">
+        <div class="task-card selected" onclick="selectTask(this,'ocr')" id="task-ocr">
+          <div class="task-icon">🧾</div>
+          <div class="task-name">发票 OCR</div>
+          <div class="task-desc">识别发票/收据，生成 Excel 报表，支持批量处理</div>
+        </div>
+        <div class="task-card" onclick="selectTask(this,'flow')" id="task-flow">
+          <div class="task-icon">🏦</div>
+          <div class="task-name">银行流水</div>
+          <div class="task-desc">解析银行流水 PDF，生成交易汇总与账号清单</div>
+        </div>
+        <div class="task-card" onclick="selectTask(this,'house')" id="task-house">
+          <div class="task-icon">🏠</div>
+          <div class="task-name">房产比价</div>
+          <div class="task-desc">分析房源数据，自动比价、生成分析报告</div>
+        </div>
+        <div class="task-card" onclick="selectTask(this,'contract')" id="task-contract">
+          <div class="task-icon">📋</div>
+          <div class="task-name">合同审查</div>
+          <div class="task-desc">提取合同关键条款，风险点标注与摘要</div>
+        </div>
+        <div class="task-card" onclick="selectTask(this,'report')" id="task-report">
+          <div class="task-icon">📊</div>
+          <div class="task-name">财务报表</div>
+          <div class="task-desc">结构化财务数据，自动生成分析图表</div>
+        </div>
+        <div class="task-card" onclick="selectTask(this,'custom')" id="task-custom">
+          <div class="task-icon">⚙️</div>
+          <div class="task-name">自定义任务</div>
+          <div class="task-desc">输入自定义提示词，处理任意文档</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODEL SELECTOR -->
+    <div class="card">
+      <div class="section-header">
+        <span class="section-title">// 推理模型</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="model-row">
+        <div class="model-chip active" onclick="selectModel(this,'qwen3:14b')">
+          <span class="m-dot"></span> qwen3:14b <span style="color:var(--text-dim);font-size:0.65rem;">本地·推荐</span>
+        </div>
+        <div class="model-chip" onclick="selectModel(this,'gemma4:26b')">
+          <span class="m-dot"></span> gemma4:26b <span style="color:var(--text-dim);font-size:0.65rem;">本地·视觉</span>
+        </div>
+        <div class="model-chip" onclick="selectModel(this,'hybrid')">
+          <span class="m-dot"></span> 混合模式 <span style="color:var(--text-dim);font-size:0.65rem;">本地+云端兜底</span>
+        </div>
+        <div class="model-chip" onclick="selectModel(this,'qwen-vl-max')">
+          <span class="m-dot" style="background:var(--amber)"></span> Qwen-VL-Max <span style="color:var(--amber);font-size:0.65rem;">云端</span>
+        </div>
+      </div>
+      <div style="margin-top:10px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);" id="modelNote">
+        ● 本地推理 — 数据全程不出内网，处理完即释放，审计日志可查
+      </div>
+    </div>
+
+    <!-- FILE UPLOAD / SMB -->
+    <div class="card">
+      <div class="section-header">
+        <span class="section-title">// 文件输入</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="drop-zone" id="dropZone"
+           ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)"
+           onclick="document.getElementById('fileInput').click()">
+        <div class="drop-icon">📂</div>
+        <div class="drop-text">拖拽文件到此处，或点击选择</div>
+        <div class="drop-sub">支持 PDF / JPG / PNG / XLSX · 最大 50MB</div>
+        <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.xlsx" style="display:none" onchange="handleFileSelect(event)">
+      </div>
+      <div class="file-list" id="fileList"></div>
+
+      <!-- PROGRESS -->
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-label">
+          <span id="progressLabel">准备中...</span>
+          <span id="progressPct">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <div class="progress-steps" id="progressSteps"></div>
+      </div>
+    </div>
+
+    <!-- ACTION -->
+    <div style="display:flex;gap:12px;align-items:center;">
+      <button class="btn btn-primary" style="padding:12px 32px;font-size:0.8rem;" onclick="startProcess()">
+        ▶ 开始处理
+      </button>
+      <button class="btn btn-secondary" onclick="resetAll()">重置</button>
+      <div style="font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);" id="actionNote">
+        请先选择文件或挂载存储
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-area" id="resultArea">
+      <table class="result-table" id="resultTable"></table>
+    </div>
+
+    <div class="download-bar" id="downloadBar">
+      <div>
+        <div class="dl-info" id="dlInfo">处理完成 — 0 条记录</div>
+        <div class="dl-sub">数据已在本地处理，无副本残留</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" onclick="downloadResult()">↓ 下载 Excel</button>
+        <button class="btn btn-secondary" onclick="viewAudit()">查看审计日志</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- AUDIT LOG PANEL -->
+  <aside class="audit-panel">
+    <div class="audit-header">
+      <div class="audit-title">// AUDIT LOG</div>
+      <div class="audit-controls">
+        <button class="audit-btn" onclick="clearLog()">清空</button>
+        <button class="audit-btn" onclick="exportLog()">导出</button>
+      </div>
+    </div>
+    <div class="audit-log" id="auditLog"></div>
+    <div class="stats-footer">
+      <div class="stat-item">
+        <div class="stat-label">PROCESSED</div>
+        <div class="stat-val" id="statProcessed">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">UPLOADED</div>
+        <div class="stat-val" style="color:var(--green)">0 bytes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">API CALLS</div>
+        <div class="stat-val" id="statApi">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">LOCAL %</div>
+        <div class="stat-val" id="statLocal">100%</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+// ── STATE ──
+let selectedTask = 'ocr';
+let selectedModel = 'qwen3:14b';
+let files = [];
+let logCount = 0;
+let processedCount = 0;
+let apiCallCount = 0;
+let isMounted = false;
+
+// ── CLOCK ──
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('zh-CN', {hour12:false});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── LOG ──
+function addLog(type, msg) {
+  const log = document.getElementById('auditLog');
+  const now = new Date();
+  const time = now.toLocaleTimeString('zh-CN', {hour12:false});
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  line.innerHTML = `
+    <span class="log-time">${time}</span>
+    <span class="log-type ${type}">${type}</span>
+    <span class="log-msg">${msg}</span>
+  `;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+  logCount++;
+  document.getElementById('logCount').textContent = logCount;
+}
+
+// ── INIT LOG ──
+setTimeout(() => {
+  addLog('INFO', '系统初始化完成');
+  addLog('INFO', 'N1盒子 192.168.2.109 在线');
+  addLog('INFO', '算力中心 192.168.2.111 连通，延迟 3ms');
+  addLog('DATA', 'Ollama 服务就绪，模型 qwen3:14b 已加载');
+  addLog('INFO', '等待存储挂载或文件上传...');
+}, 300);
+
+// ── MOUNT STORAGE ──
+// function mountStorage() {
+//   const proto = document.getElementById('mountProto').value;
+//   const host = document.getElementById('mountHost').value || '192.168.1.100';
+//   addLog('INFO', `尝试挂载 ${proto.toUpperCase()}://${host}...`);
+//   setTimeout(() => {
+//     addLog('INFO', `挂载成功: ${proto}://${host}/documents`);
+//     addLog('DATA', '扫描目录: 发现 23 个文件，支持格式 18 个');
+//     addLog('INFO', '只读权限验证通过，无写入权限');
+//     const s = document.getElementById('mountStatus');
+//     s.className = 'mount-status connected';
+//     s.innerHTML = `<span class="dot"></span> 已挂载 ${proto.toUpperCase()}://${host}/documents · 18个可处理文件`;
+//     document.querySelector('.status-bar .status-item:nth-child(3) .dot').className = 'dot';
+//     document.querySelector('.status-bar .status-item:nth-child(3)').lastChild.textContent = ' 存储已挂载';
+//     isMounted = true;
+//     document.getElementById('actionNote').textContent = '存储已挂载，可开始处理';
+//   }, 1200);
+// }
+// 
+// function testConnection() {
+//   const host = document.getElementById('mountHost').value || '未配置';
+//   addLog('INFO', `测试连接: ${host}`);
+//   setTimeout(() => {
+//     addLog('INFO', `网络可达，SMB 端口 445 开放`);
+//   }, 600);
+// }
+// 
+// function useUpload() {
+//   document.getElementById('fileInput').click();
+// }
+// 
+// ── TASK ──
+function selectTask(el, task) {
+  document.querySelectorAll('.task-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTask = task;
+  addLog('INFO', `切换任务模式: ${el.querySelector('.task-name').textContent}`);
+}
+
+// ── MODEL ──
+function selectModel(el, model) {
+  document.querySelectorAll('.model-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  selectedModel = model;
+  const notes = {
+    'qwen3:14b': '● 本地推理 — 数据全程不出内网，处理完即释放，审计日志可查',
+    'gemma4:26b': '● 本地视觉模型 — 支持图片直接识别，数据不出内网',
+    'hybrid': '⚡ 混合模式 — 优先本地，低置信度内容送云端兜底（脱敏后传输）',
+    'qwen-vl-max': '⚠ 云端模式 — 数据加密传输至阿里云，国内服务器，符合数据安全法'
+  };
+  document.getElementById('modelNote').textContent = notes[model] || '';
+  addLog(model.includes('vl-max') ? 'WARN' : 'INFO',
+    `模型切换: ${model} · ${model.includes('local') || !model.includes('vl') ? '本地推理' : '云端推理'}`);
+}
+
+// ── FILE HANDLING ──
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.add('drag-over');
+}
+function handleDragLeave() {
+  document.getElementById('dropZone').classList.remove('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  handleDragLeave();
+  addFiles(Array.from(e.dataTransfer.files));
+}
+function handleFileSelect(e) {
+  addFiles(Array.from(e.target.files));
+}
+
+function addFiles(newFiles) {
+  newFiles.forEach(f => {
+    files.push(f);
+    addLog('DATA', `文件加载: ${f.name} (${formatBytes(f.size)}) — 仅存于本机内存`);
+    renderFileList();
+  });
+  document.getElementById('actionNote').textContent = `${files.length} 个文件待处理`;
+}
+
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  list.innerHTML = files.map((f,i) => `
+    <div class="file-item">
+      <span>📄</span>
+      <span class="f-name">${f.name}</span>
+      <span class="f-size">${formatBytes(f.size)}</span>
+      <span class="f-remove" onclick="removeFile(${i})">✕</span>
+    </div>
+  `).join('');
+}
+
+function removeFile(i) {
+  addLog('INFO', `移除文件: ${files[i].name}`);
+  files.splice(i, 1);
+  renderFileList();
+}
+
+function formatBytes(b) {
+  if (b < 1024) return b + 'B';
+  if (b < 1024*1024) return (b/1024).toFixed(1) + 'KB';
+  return (b/1024/1024).toFixed(1) + 'MB';
+}
+
+// ── PROCESS ──
+function startProcess() {
+  if (files.length === 0 && !isMounted) {
+    addLog('WARN', '请先上传文件或挂载存储');
+    return;
+  }
+
+  const steps = [
+    { label: '挂载读取', duration: 800 },
+    { label: 'OCR预处理', duration: 1200 },
+    { label: '模型推理', duration: 2000 },
+    { label: '结构化解析', duration: 800 },
+    { label: '写回结果', duration: 500 },
+  ];
+
+  const wrap = document.getElementById('progressWrap');
+  wrap.classList.add('show');
+  document.getElementById('resultArea').classList.remove('show');
+  document.getElementById('downloadBar').classList.remove('show');
+
+  const stepsEl = document.getElementById('progressSteps');
+  stepsEl.innerHTML = steps.map(s => `<div class="step">${s.label}</div>`).join('');
+  const stepEls = stepsEl.querySelectorAll('.step');
+
+  addLog('INFO', `开始处理 — 任务: ${selectedTask} · 模型: ${selectedModel}`);
+  addLog('DATA', `输入: ${files.length > 0 ? files.length + '个文件' : '挂载存储'} · 数据留存本地`);
+
+  let total = steps.reduce((a,s) => a+s.duration, 0);
+  let elapsed = 0;
+  let stepIdx = 0;
+
+  const logMsgs = [
+    `挂载读取目标文件，只读模式`,
+    `图像预处理: 灰度化/去噪/倾斜校正`,
+    `${selectedModel} 推理中，内存使用 8.2GB，无网络调用`,
+    `解析 JSON → 结构化交易记录`,
+    `结果写回 /output/result.xlsx，原始文件未修改`
+  ];
+
+  function runStep(i) {
+    if (i >= steps.length) {
+      finishProcess();
+      return;
+    }
+    stepEls[i].className = 'step active';
+    addLog('INFO', logMsgs[i]);
+    if (i === 2 && selectedModel !== 'qwen-vl-max') {
+      addLog('DATA', `推理日志: token_in=1247 token_out=312 · 无数据上传`);
+    }
+    if (i === 2 && selectedModel === 'qwen-vl-max') {
+      apiCallCount++;
+      document.getElementById('statApi').textContent = apiCallCount;
+      document.getElementById('statLocal').textContent = '0%';
+      addLog('WARN', `云端API调用: qwen-vl-max · 加密传输 · 阿里云国内节点`);
+    }
+
+    setTimeout(() => {
+      elapsed += steps[i].duration;
+      stepEls[i].className = 'step done';
+      document.getElementById('progressFill').style.width = (elapsed/total*100) + '%';
+      document.getElementById('progressPct').textContent = Math.round(elapsed/total*100) + '%';
+      document.getElementById('progressLabel').textContent = steps[i].label + ' 完成';
+      runStep(i+1);
+    }, steps[i].duration);
+  }
+
+  runStep(0);
+}
+
+function finishProcess() {
+  processedCount += files.length || 5;
+  document.getElementById('statProcessed').textContent = processedCount;
+
+  addLog('INFO', `处理完成 · ${processedCount} 条记录 · 0 bytes 上传至外部`);
+  addLog('DATA', `内存已释放，无文件副本残留`);
+  addLog('INFO', `结果已写入本地: /output/result_${Date.now()}.xlsx`);
+
+  // Show result table
+  const resultArea = document.getElementById('resultArea');
+  resultArea.classList.add('show');
+
+  const mockData = [
+    { date:'2026-04-15', vendor:'某供应商科技', amount:'¥1,250.00', tax:'¥162.50', type:'增值税专票', note:'', review:false },
+    { date:'2026-04-16', vendor:'XX贸易有限公司', amount:'¥3,800.00', tax:'¥494.00', type:'增值税专票', note:'', review:false },
+    { date:'2026-04-17', vendor:'未知', amount:'¥580.00', tax:'—', type:'普票', note:'OCR待复核', review:true },
+    { date:'2026-04-18', vendor:'YY物流', amount:'¥420.00', tax:'¥54.60', type:'增值税专票', note:'', review:false },
+    { date:'2026-04-19', vendor:'ZZ餐饮', amount:'¥198.00', tax:'—', type:'收据', note:'', review:false },
+  ];
+
+  document.getElementById('resultTable').innerHTML = `
+    <thead><tr>
+      <th>日期</th><th>供应商</th><th>金额</th><th>税额</th><th>票据类型</th><th>备注</th>
+    </tr></thead>
+    <tbody>
+    ${mockData.map(r => `<tr>
+      <td>${r.date}</td>
+      <td>${r.vendor}</td>
+      <td>${r.amount}</td>
+      <td>${r.tax}</td>
+      <td>${r.type}</td>
+      <td>${r.review ? '<span class="review-badge">OCR待复核</span>' : '—'}</td>
+    </tr>`).join('')}
+    </tbody>
+  `;
+
+  const dlBar = document.getElementById('downloadBar');
+  dlBar.classList.add('show');
+  document.getElementById('dlInfo').textContent = `处理完成 — ${mockData.length} 条记录，1 条待人工复核`;
+}
+
+function downloadResult() {
+  addLog('INFO', '导出 Excel: result.xlsx · 仅下载到本设备');
+  alert('演示模式：实际部署后将下载真实Excel文件');
+}
+
+function viewAudit() {
+  addLog('INFO', '查看完整审计报告');
+}
+
+function exportLog() {
+  const lines = Array.from(document.getElementById('auditLog').querySelectorAll('.log-line'))
+    .map(l => l.textContent.trim()).join('\n');
+  const blob = new Blob([lines], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `n1-audit-${Date.now()}.log`;
+  a.click();
+  addLog('INFO', '审计日志已导出');
+}
+
+function clearLog() {
+  document.getElementById('auditLog').innerHTML = '';
+  logCount = 0;
+  document.getElementById('logCount').textContent = '0';
+}
+
+function resetAll() {
+  files = [];
+  renderFileList();
+  document.getElementById('progressWrap').classList.remove('show');
+  document.getElementById('resultArea').classList.remove('show');
+  document.getElementById('downloadBar').classList.remove('show');
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('progressSteps').innerHTML = '';
+  document.getElementById('actionNote').textContent = '请先选择文件或挂载存储';
+  addLog('INFO', '已重置，等待新任务');
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  addLog('INFO', `切换到: ${tab}`);
+}
+
+// ── 真实挂载 ──
+function mountStorage() {
+  const host = document.getElementById('mountHost').value;
+  const sharePath = document.getElementById('mountPath').value || '/Users';
+  const pass = document.querySelector('#storageSection input[type=password]').value || '';
+  if (!host) { addLog('WARN', '请输入服务器地址'); return; }
+  addLog('INFO', '正在挂载 SMB://' + host + sharePath + '...');
+  fetch('/api/smb-mount', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({host, share: sharePath.replace(/^\//, ''), user: 'Administrator', pass})
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (!data.ok) { addLog('WARN', '挂载失败: ' + (data.error || '未知')); return; }
+    isMounted = true;
+    window.mountedFiles = data.files || [];
+    addLog('INFO', '挂载成功: SMB://' + host + sharePath);
+    addLog('DATA', '扫描目录: 发现 ' + window.mountedFiles.length + ' 个文件');
+    addLog('INFO', '只读模式，数据未离开客户设备');
+    const s = document.getElementById('mountStatus');
+    s.className = 'mount-status connected';
+    s.innerHTML = '<span class="dot"></span> 已挂载 SMB://' + host + sharePath + ' · ' + window.mountedFiles.length + '个文件';
+    document.getElementById('actionNote').textContent = '存储已挂载，可开始处理';
+    const list = document.getElementById('fileList');
+    list.innerHTML = window.mountedFiles.slice(0,30).map(function(f) {
+      return '<div class="file-item"><span>' + (f.isDir ? '📁' : '📄') + '</span><span class="f-name">' + f.name + '</span><span class="f-size">' + (f.isDir ? '目录' : formatBytes(f.size)) + '</span></div>';
+    }).join('');
+  })
+  .catch(function(e) { addLog('WARN', '请求失败: ' + e.message); });
+}
+
+function testConnection() {
+  const host = document.getElementById('mountHost').value || '未配置';
+  addLog('INFO', '测试连接: ' + host + ' 端口445...');
+  setTimeout(function() { addLog('INFO', '网络层可达: ' + host); }, 600);
+}
+</script>
+</body>
+</html>

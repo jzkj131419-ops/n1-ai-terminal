@@ -478,6 +478,24 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+
+  // ── AI对话代理 ──
+  if (url.pathname === '/api/chat-proxy' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', async () => {
+      try {
+        const { message } = JSON.parse(body);
+        const result = await callBridge('/api/chat', { message, agentId: 'shangye' });
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ reply: result.reply || '无回复' }));
+      } catch(e) {
+        res.writeHead(500); res.end(JSON.stringify({ reply: '服务暂时不可用: ' + e.message }));
+      }
+    });
+    return;
+  }
+
   // ── 面板页面 ──
   if (url.pathname === '/panel') {
     serveFile(res, path.join(__dirname, 'n1_panel.html'), 'text/html; charset=utf-8');
