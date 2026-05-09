@@ -32,7 +32,10 @@ function runTask(id) {
   // 第二步：调墨影处理，指定输出目录
   const remotePath = '/tmp/n1_inbound/' + task.fileInfo.name;
   const resultDir = '/tmp/n1_results/' + id;
-  const message = `按 PLAYBOOK_司法审计.md 做。文件：${remotePath} 暂无嫌疑人，先出通用版。结果文件全部输出到目录：${resultDir}`;
+  const condition = task.fileInfo.condition || '';
+  const message = condition
+    ? `按 PLAYBOOK_司法审计.md 做。文件：${remotePath} ${condition}。结果文件全部输出到目录：${resultDir}`
+    : `按 PLAYBOOK_司法审计.md 做。文件：${remotePath} 暂无嫌疑人，先出通用版。结果文件全部输出到目录：${resultDir}`;
 
   const body = JSON.stringify({ message, agentId: 'shangye' });
 

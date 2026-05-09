@@ -454,9 +454,9 @@ const server = http.createServer(async (req, res) => {
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
       try {
-        const { filePath, fileName, fileSize } = JSON.parse(body);
+        const { filePath, fileName, fileSize, condition } = JSON.parse(body);
         const tm = require('./task-manager');
-        const id = tm.createTask({ localPath: filePath, name: fileName, size: fileSize });
+        const id = tm.createTask({ localPath: filePath, name: fileName, size: fileSize, condition: condition || '' });
         tm.runTask(id);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ ok: true, taskId: id }));
