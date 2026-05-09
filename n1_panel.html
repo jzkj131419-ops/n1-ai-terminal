@@ -928,17 +928,15 @@ body::before {
     </div>
 
     <!-- ACTION -->
-    <div style="display:flex;gap:12px;align-items:center;">
-      <div style="margin-bottom:12px;">
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div>
         <div style="font-size:0.75rem;color:var(--text-dim);margin-bottom:6px;font-family:var(--mono);">// 分析条件（选填，不填则按默认PLAYBOOK处理）</div>
-        <textarea id="analysisCondition" placeholder="例：嫌疑人周贤，重点分析公转私流水，时间范围2020-2024年&#10;例：按司法审计标准，出通用版报告" style="width:100%;height:70px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;font-family:var(--mono);font-size:0.78rem;resize:none;outline:none;box-sizing:border-box;"></textarea>
+        <textarea id="analysisCondition" placeholder="例：嫌疑人周贤，重点分析公转私流水，时间范围2020-2024年&#10;例：按司法审计标准，出通用版报告" style="width:100%;height:80px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;font-family:var(--mono);font-size:0.78rem;resize:none;outline:none;box-sizing:border-box;"></textarea>
       </div>
-      <button class="btn btn-primary" style="padding:12px 32px;font-size:0.8rem;" onclick="startProcess()">
-        ▶ 开始处理
-      </button>
-      <button class="btn btn-secondary" onclick="resetAll()">重置</button>
-      <div style="font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);" id="actionNote">
-        请先选择文件或挂载存储
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button class="btn btn-primary" style="padding:12px 32px;font-size:0.8rem;" onclick="startProcess()">▶ 开始处理</button>
+        <button class="btn btn-secondary" onclick="resetAll()">重置</button>
+        <div style="font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);" id="actionNote">请先选择文件或挂载存储</div>
       </div>
     </div>
 
