@@ -1,3 +1,5 @@
 node_modules/
 *.bak
 qrcodes/
+ai001-server
+*.src_backup
