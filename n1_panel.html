@@ -822,7 +822,11 @@ body::before {
           <input class="mono-input" id="mountPath" placeholder="/documents/invoices" />
         </div>
         <div class="input-group">
-          <label class="input-label">访问凭据</label>
+          <label class="input-label">用户名</label>
+          <input class="mono-input" id="mountUser" placeholder="Administrator / mac" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">密码</label>
           <input class="mono-input" type="password" placeholder="只读权限（推荐）" />
         </div>
       </div>
@@ -1500,7 +1504,7 @@ function pollTasks(taskIds, attempts) {
 // ── 真实挂载 ──
 function mountStorage() {
   const host = document.getElementById('mountHost').value;
-  const sharePath = document.getElementById('mountPath').value || '/Users';
+  const sharePath = document.getElementById('mountPath').value || '';
   const pass = document.querySelector('#storageSection input[type=password]').value || '';
   // 保存到sessionStorage
   sessionStorage.setItem('smb_host', host);
@@ -1511,7 +1515,7 @@ function mountStorage() {
   fetch('/api/smb-mount', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({host, share: sharePath.replace(/^\//, ''), user: 'Administrator', pass})
+    body: JSON.stringify({host, share: sharePath.replace(/^\//, ''), user: document.getElementById("mountUser").value || "Administrator", pass})
   })
   .then(r => r.json())
   .then(data => {
