@@ -1,178 +1,254 @@
 # audit-bank-ocr · 司法银行流水审计 Skill
 
-> **最后更新：** 2026-05-29（首版，基于周贤案完整流程沉淀）  
-> **适用系统：** N1 盒子（192.168.2.109）+ Mac Mini M4 算力节点
+> **版本：** v2 · 2026-05-29  
+> **主 PLAYBOOK：** `/Volumes/AI_Agent/openclaw/workspace/skills/audit-local-ocr/PLAYBOOK_司法审计.md`  
+> **适用：** 非吸 / 职侵 / 诈骗 类经济案件银行流水审计
 
 ---
 
-## 一、Skill 能做什么
+## 0. 任务识别
 
-接收法院司法查询的银行材料（xlsx / csv / PDF），自动：
-1. OCR 解析流水 → 结构化附表 xlsx
-2. 生成审计报告（.docx + .md）
-3. 结果写回 SMB 共享目录
-4. 多银行汇总 → 总台账底稿 + 汇总分析报告
+满足以下任一特征即按本手册执行：
+- 用户说"银行流水审计"、"司法审计流水"、"职务侵占分析"、"非吸案分析"
+- 用户提供 PDF/xlsx 路径，文件名含数字流水号
+- 用户提到"嫌疑人 XXX"、"分析与 XXX 有关的资金"
+
+**不适用：** 个人记账、对账核账、税务申报。
 
 ---
 
-## 二、输入材料准备
+## 一、客户主操作流程
 
-### 2.1 支持的文件类型
+> 正常情况下客户自己在 N1 面板完成，全程不需要命令行。
 
-| 类型 | 说明 | 质量 |
-|------|------|------|
-| `.xlsx` / `.csv` | 银行原始导出结构化流水 | ★★★ 最佳 |
-| `.pdf`（文本层） | 内嵌文字的 PDF，直接提取 | ★★ 良好 |
-| `.pdf`（扫描件） | 图像 PDF，走 OCR+Vision | ★ 取决于清晰度 |
+### 第1步：上传 / 挂载材料
 
-### 2.2 关键规则：每银行单独跑
+将银行材料（xlsx / csv / PDF / ZIP）放入 SMB 共享目录，支持子文件夹。  
+挂载路径示例：`\\192.168.2.109\smb_share\` 或通过面板"挂载"入口填写路径。
 
-**不要把多个银行的文件混在一个目录里触发单次任务。**  
-系统优先级：发现 xlsx/csv → 跳过 PDF OCR。混合输入会导致 PDF 被忽略。
+### 第2步：材料整理与去重
 
-正确做法：
+打开面板左侧"**材料整理**"入口，点击"扫描"：
+- 自动识别重复文件（内容级去重）
+- ZIP 自动解压（最多2层），生成 `整理后_时间戳` 目录
+- 超过2层 / 带密码 / 异常包 → 标记提示，需人工处理
+- 确认无误后点"整理"，将结果同步到"案件助手"
+
+> 若同批材料包含**明显不相关的主体或跨案件混入**，在此阶段手动拆分，不要混入同一案件任务。
+
+### 第3步：生成案件结果
+
+1. 面板左侧选"**案件助手**"
+2. 确认挂载路径，选中整理好的材料文件
+3. 填写**被审计人姓名**，点击"开始审计"
+
+系统自动完成：OCR 解析 → 生成审计附表 xlsx → 生成报告 → 写回 SMB。  
+结果写回到 `AI审计结果_时间戳/`，包含：
+- `xxx_审计附表.xlsx`（主交付物，含14+张分析 sheet）
+- `xxx_审计报告.docx`（14节 Word 正式报告）
+- `xxx_审计报告.md`（同步 Markdown）
+
+### 第4步：验收结果
+
+**客户版（日常验收）：**
+- 结果目录已正常生成（无 `AI审计失败_*`）
+- 打开 `xxx_审计报告.docx`，确认被审计人姓名、账户期间、收支合计无明显异常
+- 附表 sheet `1交易记录汇总` 有数据，条数不为零
+
+**内部版（精确核验，交付前必做）：**
+对照 **PDF 第一页头部** 的三个合计数：
+
+| 验收项 | 方法 |
+|--------|------|
+| 条数对上 | 解析条数 = PDF 头部"交易明细合计" |
+| 净额对上 | 解析(收入-支出) = PDF头部(收入合计-支出合计) |
+| 差额定位 | 有差额必须定位到具体冲正/红冲交易 |
+
+三条全过 → 数据可信，报告可发。有差额参见"排障 §T3"。
+
+---
+
+## 一A、可选增强
+
+### 增强1：嫌疑人专题分析
+
+获得嫌疑人姓名后补做，聚焦5大红旗：
+1. 单笔精确 ¥50,000（规避监管卡限）
+2. 单日多笔向同一对手（化整为零）
+3. 摘要无业务实质（全是"转账/汇入"）
+4. 极度单向性（流出>>流入）
+5. 即收即转（公司大额收款当日转嫌疑人）
+
+> 详见 PLAYBOOK §6 + 本地 LLM 批量判定 §6.5。
+
+### 增强2：多银行汇总
+
+多个银行分别出审计结果后，合并到一个交付目录：
 ```
-广发 → 单独任务（只放广发文件）
-建设 → 单独任务（只放建设文件）
-民生 → 单独任务（只放民生文件）
-最后 → 手动汇总
+AI案件汇总_姓名_时间戳/
+├── 00_汇总分析.docx   ← 多账户总览+风险红旗
+├── 01_广发/
+├── 02_建设/
+├── 03_民生/
+└── 04_总台账底稿/总台账底稿.csv
+```
+> 当前面板"案件汇总"按钮暂无后端，需命令行操作，详见"排障 §T7"。
+
+---
+
+## 二、交付物清单
+
+每单完整交付：
+
+```
+AI案件汇总_姓名_时间戳/
+├── 00_汇总分析.docx/.md         ← 多银行总览+风险红旗（参照国际审计标准）
+├── 01_银行A/
+│   ├── xxx_审计附表.xlsx         ← 主交付物，含1-17张sheet
+│   ├── xxx_审计报告.docx         ← 14节正式报告
+│   └── xxx_审计报告.md
+├── 02_银行B/...
+└── 04_总台账底稿/
+    └── 总台账底稿.csv            ← 所有银行合并，首列为银行来源
 ```
 
-### 2.3 文件放置位置
+如有嫌疑人专题：额外附 `xxx_嫌疑人_专题分析.docx/.md`。
+
+---
+
+## 三、特殊情况 / 内部排障
+
+> 以下内容是**技术人员排障用**，不属于客户操作流程。
+
+### T1：某银行 PDF 被系统忽略（SOURCES 只有 xlsx）
+
+**原因：** 同一目录里有 xlsx/csv 文件时，系统优先走结构化解析，跳过 PDF OCR。
+
+**正确做法：** 每个银行单独发起一次任务，不要把多家银行的文件放在同一个目录触发。
 
 ```bash
-# 文件放到 SMB 根目录，用 selectedFiles 精确指定
-/mnt/smb_client/文件名.xlsx
-/mnt/smb_client/文件名.pdf
-```
-
----
-
-## 三、触发审计任务
-
-### 3.1 标准触发（xlsx/csv 或简单 PDF）
-
-```bash
+# 广发（xlsx）单独任务
 curl -s -X POST http://192.168.2.109:3000/api/task-start \
   -H "Content-Type: application/json" \
-  -d '{
-    "task": "case",
-    "customerName": "被审计人姓名",
-    "selectedFiles": [
-      "文件1.xlsx",
-      "文件2.pdf"
-    ]
-  }'
+  -d '{"task":"case","customerName":"周贤","selectedFiles":["55776信用卡流水.xlsx","55776信用卡开户.xlsx"]}'
+
+# 建设（PDF）单独任务
+curl -s -X POST http://192.168.2.109:3000/api/task-start \
+  -d '{"task":"case","customerName":"周贤_建设","selectedFiles":["建设PDF1.pdf","建设PDF2.pdf"]}'
 ```
 
-返回：`{"ok":true,"taskId":"task_xxx","caseId":"case_xxx"}`
+### T2：OCR 完成但解析出极少交易（如 PDF 有100页却只出2条）
 
-### 3.2 强制 vision 模式（复杂 PDF 格式）
+**原因：** 该银行 PDF 有内嵌文本层，但格式为多列交叉排版（如民生银行司法查询），文本解析器不识别。
 
-部分银行 PDF 有文本层但格式特殊（如民生银行多列排版），文本解析器识别率极低。
-需在 `run_audit_local_ocr.py` 直接调用：
+**处理：** 绕过 N1 任务系统，直接在 Mac 上调 OCR 脚本强制 vision 模式：
 
 ```bash
+RESULT_DIR="/tmp/vision_$(date +%s)"
+mkdir -p "$RESULT_DIR/源数据" "$RESULT_DIR/审计中间结果"
+cp /tmp/n1_results/task_xxx/审计源数据/文件.pdf "$RESULT_DIR/源数据/"
+
 python3 /Volumes/AI_Agent/openclaw/workspace/skills/audit-local-ocr/scripts/run_audit_local_ocr.py \
-  --input-dir /tmp/task_xxx/源数据 \
-  --template /Volumes/AI_Agent/AI_Controlled_Zone/audit_base/空白审计模板.xlsx \
-  --output-xlsx /tmp/task_xxx/output.xlsx \
-  --artifacts-dir /tmp/task_xxx/审计中间结果 \
+  --input-dir "$RESULT_DIR/源数据" \
+  --template "/Volumes/AI_Agent/AI_Controlled_Zone/audit_base/空白审计模板.xlsx" \
+  --output-xlsx "$RESULT_DIR/审计中间结果/output.xlsx" \
+  --artifacts-dir "$RESULT_DIR/审计中间结果" \
   --customer-name "姓名" \
   --mode vision
-```
 
-OCR 完成后，把 output.xlsx 重命名含 `审计附表` 上传 SMB，再触发报告任务：
-
-```bash
-# 上传 xlsx（用中转方式避免中文路径问题）
-sshpass -p '139319' scp output.xlsx root@192.168.2.109:/tmp/temp.xlsx
+# 完成后上传 xlsx 并重触发报告
+sshpass -p '139319' scp "$RESULT_DIR/审计中间结果/output.xlsx" root@192.168.2.109:/tmp/temp.xlsx
 sshpass -p '139319' ssh root@192.168.2.109 "cp /tmp/temp.xlsx '/mnt/smb_client/XXX_审计附表.xlsx'"
-
-# 触发报告生成
 curl -s -X POST http://192.168.2.109:3000/api/task-start \
   -d '{"task":"case","customerName":"姓名","selectedFiles":["XXX_审计附表.xlsx"]}'
 ```
 
----
+### T3：验收有差额（净额对不上）
 
-## 四、监控任务进度
+**两种情况：**
+1. **净额对上但收入支出各高一个相同数** → 冲正交易问题（正常）
+   - 搜摘要含"冲正/红冲/撤销"的交易，金额等于差额即可确认
+   - 在备注列打 `[冲正]` 标签便于筛除
+2. **净额对不上** → 解析有错，回查列位置/页边界
+
+### T4：Vision 全返回 0 条
+
+逐一排查：
 
 ```bash
-# 实时日志
-sshpass -p '139319' ssh root@192.168.2.109 "tail -f /var/log/n1-audit-task.log"
+# 1. 看是 JSON 还是 error 文件
+ls ~/tmp/audit-local-ocr/*/vision/*.error.txt 2>/dev/null
 
-# 本地 OCR 进度（Mac 上）
-ls ~/tmp/audit-local-ocr/*/vision/ | wc -l  # 已处理页数
-
-# 关键完成标志
-grep "结果已写回" /var/log/n1-audit-task.log
+# 2. 常见错误及对应修复
+cat ~/tmp/audit-local-ocr/*/vision/*.error.txt
+# "No module named 'openai'" → /opt/homebrew/bin/pip3 install openai --break-system-packages
+# "extract_json_object" NameError → 确认 BUGS_FIXED.md #3 已修复
 ```
 
----
-
-## 五、结果汇总（多银行）
-
-系统暂无 API 接口，手动命令行完成：
+### T5：文件上传到 SMB 遇到中文路径问题
 
 ```bash
-# 1. 建汇总目录
+# 用中转方式
+sshpass -p '139319' scp 文件.pdf root@192.168.2.109:/tmp/temp.pdf
+sshpass -p '139319' ssh root@192.168.2.109 "cp /tmp/temp.pdf '/mnt/smb_client/正式文件名.pdf'"
+```
+
+### T6：Excel 文件被锁（覆盖时报 Permission Denied）
+
+Windows Excel 打开着该文件。关闭 Excel 再操作。
+
+### T7：手动触发多银行汇总（案件汇总面板按钮暂无后端）
+
+```bash
 OUTDIR="/mnt/smb_client/AI案件汇总_${姓名}_$(date +%Y%m%d_%H%M%S)"
 sshpass -p '139319' ssh root@192.168.2.109 "
-  mkdir -p '$OUTDIR/01_银行A' '$OUTDIR/02_银行B' '$OUTDIR/04_总台账底稿'
-  cp /mnt/smb_client/AI审计结果_XXX1/* '$OUTDIR/01_银行A/'
-  cp /mnt/smb_client/AI审计结果_XXX2/* '$OUTDIR/02_银行B/'
+  mkdir -p '$OUTDIR/01_广发' '$OUTDIR/02_建设' '$OUTDIR/03_民生' '$OUTDIR/04_总台账底稿'
+  cp /mnt/smb_client/AI审计结果_XXX1/* '$OUTDIR/01_广发/'
+  cp /mnt/smb_client/AI审计结果_XXX2/* '$OUTDIR/02_建设/'
+  cp /mnt/smb_client/AI审计结果_XXX3/* '$OUTDIR/03_民生/'
 "
-
-# 2. 合并总台账（Mac 本地 Python）
-# 参考 /tmp/总台账底稿_*.csv 生成逻辑
-
-# 3. 生成汇总分析报告
-# 参考 00_汇总分析.md/docx 模板
+# 然后本地 Python 合并 xlsx → 总台账底稿.csv
+# 生成 00_汇总分析.md + .docx
 ```
 
 ---
 
-## 六、结果目录结构
+## 四、已知限制（当前版本）
 
-```
-AI案件汇总_姓名_时间戳/
-├── 00_汇总分析.docx   ← 三账户总览+风险红旗（参照国际审计标准）
-├── 00_汇总分析.md
-├── 01_广发/
-│   ├── xxx_审计附表.xlsx
-│   ├── xxx_审计报告.docx
-│   └── xxx_审计报告.md
-├── 02_建设/...
-├── 03_民生/...
-└── 04_总台账底稿/
-    └── 总台账底稿.csv   ← 所有银行交易合并，首列为银行来源
-```
+| 限制 | 影响 | 计划修复 |
+|------|------|---------|
+| 民生银行多列格式自动降级未实现 | 文本层PDF只出2条，需手动触发vision | Bug #7，待排期 |
+| `task-start` API 不支持 `auditMode` 参数 | 无法通过面板指定 vision 模式 | Bug #6，待排期 |
+| 案件汇总面板按钮无后端 | 多银行汇总只能命令行操作 | 待实装 `/api/case-summary-*` |
+| 民生司法查询数据质量 | 日期/对手字段有误差，需人工复核关键交易 | 格式解析器优化 |
+
+> **注：** 当前系统默认按案件视角处理材料；若同批材料存在明显无关主体或跨案件混入，建议先在材料整理阶段拆分，避免结果混淆。
 
 ---
 
-## 七、常见问题
-
-| 现象 | 原因 | 解决 |
-|------|------|------|
-| SOURCES 只有 xlsx，PDF 被忽略 | 目录里有结构化文件，PDF 被跳过 | 各银行单独任务 |
-| `no transactions parsed` | PDF 格式特殊，文本解析器不认识 | 用 `--mode vision` 直接调 OCR 脚本 |
-| vision 全返回 0 条 | `extract_json_object` 未定义 | 已修复（见 BUGS_FIXED.md #3） |
-| `Permission denied (publickey,password)` | SSH key 未加载 | `sshpass -p '139319'` 前缀 |
-| 文件被锁定无法覆盖 | Windows Excel 开着该文件 | 关闭 Excel 再操作 |
-| `/tmp/` 下 tesseract 报找不到文件 | macOS TCC 沙盒限制 | 已修复（见 BUGS_FIXED.md #2） |
-
----
-
-## 八、关键路径速查
+## 五、关键路径速查
 
 | 资源 | 路径 |
 |------|------|
-| N1 面板（局域网） | http://192.168.2.109:3000/panel |
-| N1 面板（公网） | https://n2.jzkjbj.cn/panel |
-| 审计日志 | N1: /var/log/n1-audit-task.log |
-| OCR 脚本 | Mac: /Volumes/AI_Agent/openclaw/workspace/skills/audit-local-ocr/scripts/run_audit_local_ocr.py |
-| 审计脚本 | N1: /opt/ai001/run_audit.rewired.sh |
-| 结果目录 | N1: /mnt/smb_client/AI审计结果_* |
-| 临时目录 | Mac: ~/tmp/audit-local-ocr/ |
-| Vision 配置 | Mac: ~/.openclaw/openclaw.json → models.providers.aliyun |
+| **主 PLAYBOOK** | `/Volumes/AI_Agent/openclaw/workspace/skills/audit-local-ocr/PLAYBOOK_司法审计.md` |
+| **银行格式手册** | `BANK_FORMATS.md`（同目录）|
+| **Bug 记录** | `BUGS_FIXED.md`（同目录）|
+| N1 面板（局域网） | `http://192.168.2.109:3000/panel` |
+| N1 面板（公网） | `https://n2.jzkjbj.cn/panel` |
+| N1 SSH | `sshpass -p '139319' ssh -o StrictHostKeyChecking=no root@192.168.2.109` |
+| 审计日志 | N1: `/var/log/n1-audit-task.log` |
+| OCR 脚本 | `/Volumes/AI_Agent/openclaw/workspace/skills/audit-local-ocr/scripts/run_audit_local_ocr.py` |
+| 批量分类脚本 | `.../scripts/batch_classify_audit.py` |
+| 报告模板 | `.../templates/generate_audit_report.py` + `generate_suspect_analysis.py` |
+| Excel 空模板 | `/Volumes/AI_Agent/AI_Controlled_Zone/audit_base/空白审计模板.xlsx` |
+| OCR 临时目录 | `~/tmp/audit-local-ocr/`（不能用 /tmp，macOS TCC 限制）|
+| Vision 配置 | `~/.openclaw/openclaw.json → models.providers.aliyun` |
+
+---
+
+## 六、历史案例索引
+
+| 案件 | 银行 | 条数 | 关键特征 |
+|------|------|------|---------|
+| 沙暴文化（2026-05） | 农商+农行+建行 | 7003+2818+1827 | 嫌疑人周贤，净转出¥1761万，本地LLM首次实战 |
+| 周贤（2026-05-29） | 广发+建设+民生 | 14789+142+467 | 三银行司法查询，修复7个OCR系统bug |
