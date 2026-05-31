@@ -1264,20 +1264,28 @@ const server = http.createServer(async (req, res) => {
         const { host, share, user, pass } = JSON.parse(body);
         const mountPoint = '/mnt/smb_client';
         if (!fs.existsSync(mountPoint)) fs.mkdirSync(mountPoint, { recursive: true });
-        const { execSync } = require('child_process');
-        try { execSync(`umount ${mountPoint} 2>/dev/null || true`); } catch(e) {}
-        try {
-          execSync(`mount -t cifs //${host}/${share} ${mountPoint} -o username=${user||'guest'},password=${pass||''},iocharset=utf8,vers=3.0 2>&1`);
-        } catch(me) {
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ ok: false, error: me.message }));
-          return;
-        }
-        // 挂载成功后保存配置，供 run_audit.sh 动态读取
-        fs.writeFileSync('/opt/ai001/smb_config.json', JSON.stringify({ host, share, mountPoint, user: user||'guest' }, null, 2));
-        const files = listMountedAuditFiles(mountPoint);
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: true, files }));
+        const { exec } = require('child_process');
+        // 先异步 umount，再异步 mount，超时 20s，不阻塞主线程
+        exec(`umount ${mountPoint} 2>/dev/null || true`, () => {
+          const cmd = `mount -t cifs //${host}/${share} ${mountPoint} -o username=${user||'guest'},password=${pass||''},iocharset=utf8,vers=3.0`;
+          const timer = setTimeout(() => {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: false, error: '挂载超时（20s），请检查网络或共享是否开启' }));
+          }, 20000);
+          exec(cmd, (err) => {
+            clearTimeout(timer);
+            if (err) {
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ ok: false, error: err.message }));
+              return;
+            }
+            // 挂载成功后保存配置，供 run_audit.sh 动态读取
+            fs.writeFileSync('/opt/ai001/smb_config.json', JSON.stringify({ host, share, mountPoint, user: user||'guest' }, null, 2));
+            const files = listMountedAuditFiles(mountPoint);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: true, files }));
+          });
+        });
       } catch(e) {
         res.writeHead(500); res.end(JSON.stringify({ ok: false, error: e.message }));
       }
