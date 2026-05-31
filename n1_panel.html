@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0159)file:///Users/lin/Downloads/Telegram%20Desktop/N1%20%E6%99%BA%E8%83%BD%E7%BB%88%E7%AB%AF%20%C2%B7%20%E4%BC%81%E4%B8%9A%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>N1 智能终端 · 企业管理面板</title>
 <style>
@@ -221,6 +221,60 @@ body::before {
   border: 1px solid var(--border-bright);
   padding: 1px 6px;
 }
+.device-card {
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: grid;
+  gap: 10px;
+}
+.device-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.device-card-id {
+  font-family: var(--mono);
+  color: var(--green);
+  font-size: 0.78rem;
+}
+.device-chip {
+  padding: 2px 6px;
+  border: 1px solid var(--border-bright);
+  background: var(--green-dim);
+  color: var(--green);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+}
+.device-grid {
+  display: grid;
+  gap: 8px;
+}
+.device-row {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 8px;
+  align-items: start;
+}
+.device-label {
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+}
+.device-value {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  overflow-wrap: anywhere;
+}
+.device-note {
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
 
 /* ── CONTENT AREA ── */
 .content {
@@ -320,6 +374,46 @@ body::before {
 }
 
 .mount-status.connected .dot { background: var(--green); }
+
+.recommended-mount {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  background: var(--green-dim);
+  border: 1px solid var(--border-bright);
+}
+
+.recommended-mount.show { display: flex; }
+
+.recommended-mount-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.recommended-mount-title {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--green);
+}
+
+.recommended-mount-desc {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.recommended-mount-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
 .btn-row { display: flex; gap: 10px; }
 
@@ -459,7 +553,17 @@ body::before {
   background: var(--green-dim);
 }
 
+.drop-zone.has-files {
+  border-color: var(--green);
+  background: rgba(0,255,170,0.12);
+  box-shadow: inset 0 0 0 1px rgba(0,255,170,0.12);
+}
+
 .drop-icon { font-size: 2rem; margin-bottom: 10px; opacity: 0.5; }
+
+.drop-zone.has-files .drop-icon {
+  opacity: 1;
+}
 
 .drop-text {
   font-size: 0.82rem;
@@ -467,11 +571,35 @@ body::before {
   margin-bottom: 6px;
 }
 
+.drop-zone.has-files .drop-text {
+  color: var(--green);
+}
+
 .drop-sub {
   font-family: var(--mono);
   font-size: 0.68rem;
   color: var(--text-dim);
   opacity: 0.6;
+}
+
+.drop-zone.has-files .drop-sub {
+  opacity: 1;
+}
+
+.inline-note {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.inline-note.warn {
+  background: var(--amber-dim);
+  border-color: rgba(255,179,0,0.35);
+  color: #f5d27a;
 }
 
 .file-list { margin-top: 12px; }
@@ -490,7 +618,28 @@ body::before {
 
 .file-item .f-name { flex: 1; color: var(--text); }
 .file-item .f-size { color: var(--text-dim); }
-.file-item .f-remove { color: var(--red); cursor: pointer; margin-left: 8px; }
+.file-item .f-state {
+  font-size: 0.66rem;
+  color: var(--green);
+  border: 1px solid rgba(0,255,170,0.25);
+  background: rgba(0,255,170,0.08);
+  padding: 2px 8px;
+}
+.file-item .f-remove {
+  color: var(--text-dim);
+  cursor: pointer;
+  margin-left: 2px;
+  border: 1px solid var(--border);
+  background: transparent;
+  padding: 2px 8px;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+}
+.file-item .f-remove:hover {
+  color: var(--red);
+  border-color: rgba(255,68,68,0.35);
+  background: rgba(255,68,68,0.08);
+}
 
 /* ── PROGRESS ── */
 .progress-wrap {
@@ -546,7 +695,7 @@ body::before {
 .step.active { border-color: var(--amber); color: var(--amber); animation: blink 1s infinite; }
 @keyframes blink { 50% { opacity: 0.5; } }
 
-/* ── RIGHT PANEL: AUDIT LOG ── */
+/* ── RIGHT PANEL: LOCAL TRACE ── */
 .audit-panel {
   border-left: 1px solid var(--border);
   background: var(--panel);
@@ -706,6 +855,368 @@ body::before {
 
 .dl-info { font-size: 0.78rem; color: var(--green); }
 .dl-sub { font-size: 0.68rem; color: var(--text-dim); margin-top: 2px; }
+.result-assets {
+  display: none;
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+.result-assets.show { display: block; }
+.result-assets-title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--green);
+  margin-bottom: 10px;
+  letter-spacing: 0.1em;
+}
+.result-assets-grid {
+  display: grid;
+  gap: 10px;
+}
+.result-assets-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.result-assets-note {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+}
+.panel-flash {
+  animation: panelFlash 1.4s ease;
+}
+@keyframes panelFlash {
+  0% { box-shadow: 0 0 0 0 rgba(0,229,160,0.0); border-color: var(--border); }
+  30% { box-shadow: 0 0 0 2px rgba(0,229,160,0.28); border-color: var(--green); }
+  100% { box-shadow: 0 0 0 0 rgba(0,229,160,0.0); border-color: var(--border); }
+}
+.refine-status {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.refine-status.show { display: flex; }
+.refine-status-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.refine-status-title { color: var(--green); }
+.refine-status-meta { color: var(--text-dim); font-size: 0.68rem; }
+.refine-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.62);
+  z-index: 9998;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  pointer-events: auto;
+}
+.modal-backdrop.show { display: flex; }
+.case-record-modal {
+  width: min(920px, 100%);
+  max-height: min(82vh, 900px);
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--border-bright);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 9999;
+  color: var(--text);
+  pointer-events: auto;
+}
+.case-record-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.case-record-title {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--green);
+}
+.case-record-body {
+  overflow: auto;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+.case-record-section {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 12px;
+}
+.case-record-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.case-record-value {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.case-record-list {
+  display: grid;
+  gap: 6px;
+}
+.case-record-item {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--text);
+  border-left: 2px solid var(--green);
+  padding-left: 8px;
+}
+
+.refine-panel {
+  display: none;
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.prep-shell {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.prep-shell.show {
+  display: flex;
+}
+
+.prep-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 16px;
+}
+
+.prep-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.prep-stat {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  padding: 12px;
+}
+
+.prep-stat-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.prep-stat-value {
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: var(--green);
+}
+
+.prep-list {
+  display: grid;
+  gap: 8px;
+}
+
+.prep-item {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  padding: 10px 12px;
+}
+
+.prep-item-title {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.prep-item-meta {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.prep-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+.prep-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.prep-dot.warn {
+  background: var(--amber);
+}
+
+.prep-dot.muted {
+  background: var(--border);
+}
+
+.prep-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.prep-action-btn.busy {
+  opacity: 0.82;
+  cursor: progress;
+  box-shadow: 0 0 0 1px rgba(0,229,160,0.24), 0 0 18px rgba(0,229,160,0.14);
+}
+
+.prep-action-btn.active {
+  background: rgba(0, 229, 160, 0.12);
+  border-color: var(--green);
+  color: var(--green);
+  box-shadow: inset 0 0 0 1px rgba(0,229,160,0.18), 0 0 16px rgba(0,229,160,0.08);
+}
+
+.prep-action-btn.done {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px rgba(0,229,160,0.22), 0 0 20px rgba(0,229,160,0.12);
+}
+
+.prep-note {
+  white-space: pre-wrap;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.75;
+  color: var(--text);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  padding: 12px;
+}
+
+@media (max-width: 1100px) {
+  .prep-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prep-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.refine-panel.show { display: block; }
+
+.refine-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.refine-title {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--green);
+}
+
+.refine-sub {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.refine-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.refine-messages {
+  min-height: 96px;
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.refine-tag {
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--text-dim);
+}
+
+.refine-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.refine-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 9px 12px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  outline: none;
+}
+
+.refine-send-btn {
+  min-width: 104px;
+  font-weight: 600;
+}
 
 /* scrollbar */
 .content::-webkit-scrollbar { width: 4px; }
@@ -728,7 +1239,7 @@ body::before {
     <div class="status-item"><span class="dot"></span> 盒子在线</div>
     <div class="status-item"><span class="dot"></span> 算力中心连通</div>
     <div class="status-item"><span class="dot amber"></span> 存储未挂载</div>
-    <div class="time-display" id="clock">--:--:--</div>
+    <div class="time-display" id="clock">07:12:13</div>
   </div>
 </header>
 
@@ -737,39 +1248,63 @@ body::before {
   <nav class="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">功能模块</div>
-      <div class="nav-item active" onclick="switchTab('task')">
+      <div class="nav-item active" onclick="switchTab(&#39;task&#39;, this)">
         <span class="nav-icon">⚡</span> 任务执行
       </div>
-      <div class="nav-item" onclick="switchTab('storage')">
+      <div class="nav-item" onclick="switchTab(&#39;storage&#39;, this)">
         <span class="nav-icon">💾</span> 存储挂载
       </div>
-      <div class="nav-item" onclick="switchTab('model')">
+      <div class="nav-item" onclick="switchTab(&#39;model&#39;, this)">
         <span class="nav-icon">🧠</span> 模型配置
       </div>
-      <div class="nav-item" onclick="switchTab('audit')">
+      <div class="nav-item" onclick="switchTab(&#39;audit&#39;, this)">
         <span class="nav-icon">🔍</span> 审计报告
-        <span class="nav-badge" id="logCount">0</span>
+        <span class="nav-badge" id="logCount">5</span>
       </div>
-      <div class="nav-item" onclick="switchTab('chat')">
-        <span class="nav-icon">💬</span> AI对话
+      <div class="nav-item" onclick="switchTab(&#39;prep&#39;, this)">
+        <span class="nav-icon">🗂️</span> 材料整理
+      </div>
+      <div class="nav-item" onclick="switchTab(&#39;summary&#39;, this)">
+        <span class="nav-icon">🧩</span> 结果汇总
+      </div>
+      <div class="nav-item" onclick="switchTab(&#39;chat&#39;, this)">
+        <span class="nav-icon">💬</span> 案件助手
       </div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">系统信息</div>
-      <div class="nav-item" onclick="switchTab('device')">
+      <div class="nav-item" onclick="switchTab(&#39;device&#39;, this)">
         <span class="nav-icon">📦</span> 设备信息
       </div>
     </div>
     <div class="sidebar-section" style="margin-top:auto;">
-      <div style="padding:12px;background:var(--bg);border:1px solid var(--border);font-size:0.72rem;">
-        <div style="color:var(--text-dim);font-family:var(--mono);font-size:0.62rem;margin-bottom:8px;">设备 ID</div>
-        <div style="font-family:var(--mono);color:var(--green);font-size:0.75rem;">N1-109</div>
-        <div style="color:var(--text-dim);font-size:0.68rem;margin-top:4px;">192.168.2.109</div>
-        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
-          <div style="color:var(--text-dim);font-family:var(--mono);font-size:0.62rem;margin-bottom:4px;">算力中心</div>
-          <div style="font-family:var(--mono);color:var(--text);font-size:0.72rem;">192.168.2.111</div>
-          <div style="color:var(--green);font-size:0.68rem;margin-top:2px;">● 延迟 3ms</div>
+      <div class="device-card">
+        <div class="device-card-top">
+          <div>
+            <div class="device-label">设备身份</div>
+            <div class="device-card-id" id="deviceCardId">N1-109</div>
+          </div>
+          <div class="device-chip" id="deviceChip">本地模式</div>
         </div>
+        <div class="device-grid">
+          <div class="device-row">
+            <div class="device-label">设备ID</div>
+            <div class="device-value" id="deviceInstanceId">N1-109-202605</div>
+          </div>
+          <div class="device-row">
+            <div class="device-label">当前入口</div>
+            <div class="device-value" id="deviceEntryAddress">192.168.2.109:3000</div>
+          </div>
+          <div class="device-row">
+            <div class="device-label">接入码</div>
+            <div class="device-value" id="deviceJoinCode">JZ-N1-109</div>
+          </div>
+          <div class="device-row">
+            <div class="device-label">统一入口</div>
+            <div class="device-value" id="deviceGateway">n2.jzkjbj.cn/panel</div>
+          </div>
+        </div>
+        <div class="device-note" id="deviceNote">本机作为本地处理入口使用。案件材料、版本结果与本地留痕默认留在当前控制域内。</div>
       </div>
     </div>
   </nav>
@@ -779,19 +1314,21 @@ body::before {
     <!-- CHAT SECTION -->
     <div class="card" id="chatSection" style="display:none;height:calc(100vh - 120px);display:none;flex-direction:column;">
       <div class="section-header">
-        <span class="section-title">// AI 对话</span>
+        <span class="section-title">// AI 案件助手</span>
         <button class="btn btn-secondary" onclick="clearChat()" style="font-size:0.7rem;padding:4px 10px;">清空</button>
+      </div>
+      <div class="inline-note" style="margin:12px 12px 0 12px;">
+        用于案前沟通、材料准备、审计思路讨论与结果解释。默认走本地助手，不替代主处理链路。
       </div>
       <div id="chatMessages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:400px;max-height:500px;"></div>
       <div style="padding:12px;border-top:1px solid var(--border);display:flex;gap:8px;">
-        <input id="chatInput" type="text" placeholder="输入消息，回车发送... 例：分析刚才的审计结果" 
-          style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 12px;font-family:var(--mono);font-size:0.8rem;outline:none;"
-          onkeydown="if(event.key==='Enter')sendChat()">
+        <input id="chatInput" type="text" placeholder="先聊案件目标、重点对象或材料准备。例：我要做司法审计，重点看公转私" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 12px;font-family:var(--mono);font-size:0.8rem;outline:none;" onkeydown="if(event.key===&#39;Enter&#39;)sendChat()">
         <button class="btn btn-primary" onclick="sendChat()" style="padding:8px 16px;">发送</button>
       </div>
     </div>
 
   <main class="content" id="mainContent">
+    <div id="taskSection">
 
     <!-- STORAGE MOUNT -->
     <div class="card" id="storageSection">
@@ -799,9 +1336,16 @@ body::before {
         <span class="section-title">// 存储挂载</span>
         <div class="section-line"></div>
       </div>
-      <div class="mount-status" id="mountStatus">
-        <span class="dot amber"></span>
-        <span>未挂载 — 请配置存储路径</span>
+      <div class="mount-status" id="mountStatus"><span class="dot"></span> 尚未挂载，请先填写当前电脑要访问的共享信息</div>
+      <div class="recommended-mount" id="recommendedMount">
+        <div class="recommended-mount-text">
+          <div class="recommended-mount-title">推荐连接</div>
+          <div class="recommended-mount-desc" id="recommendedMountDesc">正在读取盒子上次成功连接的共享配置...</div>
+        </div>
+        <div class="recommended-mount-actions">
+          <button class="btn btn-secondary" id="clearCurrentDeviceMountBtn" onclick="clearCurrentDeviceMountProfile()" style="display:none;">清当前设备记录</button>
+          <button class="btn btn-secondary" onclick="applyRecommendedMount()">一键套用</button>
+        </div>
       </div>
       <div class="mount-grid">
         <div class="input-group">
@@ -810,95 +1354,85 @@ body::before {
             <option value="smb">SMB（Windows共享）</option>
             <option value="nfs">NFS（Linux/NAS）</option>
             <option value="local">本地路径</option>
-            <option value="upload">文件上传（演示）</option>
+            <option value="upload">本机文件导入（本页预览）</option>
           </select>
         </div>
         <div class="input-group">
           <label class="input-label">服务器地址</label>
-          <input class="mono-input" id="mountHost" placeholder="192.168.1.100 或 //server/share" />
+          <input class="mono-input" id="mountHost" placeholder="192.168.1.100 或 //server/share" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-listener-added_0f292324="true">
         </div>
         <div class="input-group">
           <label class="input-label">共享目录</label>
-          <input class="mono-input" id="mountPath" placeholder="/documents/invoices" />
+          <input class="mono-input" id="mountPath" placeholder="/documents/invoices" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
         </div>
         <div class="input-group">
           <label class="input-label">用户名</label>
-          <input class="mono-input" id="mountUser" placeholder="Administrator / mac" />
+          <input class="mono-input" id="mountUser" name="mount_user_manual" placeholder="Administrator / mac" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-listener-added_0f292324="true">
         </div>
         <div class="input-group">
           <label class="input-label">密码</label>
-          <input class="mono-input" type="password" placeholder="只读权限（推荐）" />
+          <input class="mono-input" id="mountPassword" name="mount_password_manual" type="password" placeholder="只读权限（推荐）" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false">
         </div>
       </div>
       <div class="btn-row">
         <button class="btn btn-primary" onclick="mountStorage()">挂载存储</button>
         <button class="btn btn-secondary" onclick="testConnection()">测试连接</button>
-        <button class="btn btn-secondary" onclick="useUpload()">使用文件上传（演示）</button>
+        <button class="btn btn-secondary" onclick="useUpload()">导入本机文件（预览）</button>
       </div>
     </div>
 
     <!-- TASK SELECTOR -->
     <div class="card">
       <div class="section-header">
-        <span class="section-title">// 任务类型</span>
+        <span class="section-title">// 工作流入口</span>
         <div class="section-line"></div>
       </div>
       <div class="task-grid">
-        <div class="task-card selected" onclick="selectTask(this,'ocr')" id="task-ocr">
+        <div class="task-card selected" onclick="selectTask(this,&#39;case&#39;)" id="task-case">
+          <div class="task-icon">🧭</div>
+          <div class="task-name">单案件处理</div>
+          <div class="task-desc">默认主流程，吃当前选中的材料，产出审计附表 + 审计报告，并生成 1 份案件结果目录</div>
+        </div>
+        <div class="task-card" onclick="selectTask(this,&#39;invoice&#39;)" id="task-invoice">
           <div class="task-icon">🧾</div>
-          <div class="task-name">发票 OCR</div>
-          <div class="task-desc">识别发票/收据，生成 Excel 报表，支持批量处理</div>
+          <div class="task-name">票据台账</div>
+          <div class="task-desc">面向扫描仪和批量票据识别，输出本地 Excel 台账并标记待复核项</div>
         </div>
-        <div class="task-card" onclick="selectTask(this,'flow')" id="task-flow">
-          <div class="task-icon">🏦</div>
-          <div class="task-name">银行流水</div>
-          <div class="task-desc">解析银行流水 PDF，生成交易汇总与账号清单</div>
-        </div>
-        <div class="task-card" onclick="selectTask(this,'house')" id="task-house">
-          <div class="task-icon">🏠</div>
-          <div class="task-name">房产比价</div>
-          <div class="task-desc">分析房源数据，自动比价、生成分析报告</div>
-        </div>
-        <div class="task-card" onclick="selectTask(this,'contract')" id="task-contract">
+        <div class="task-card" onclick="selectTask(this,&#39;contract&#39;)" id="task-contract">
           <div class="task-icon">📋</div>
           <div class="task-name">合同审查</div>
-          <div class="task-desc">提取合同关键条款，风险点标注与摘要</div>
+          <div class="task-desc">提取核心条款、风险点和差异项，适合律所与审计中的合同核查场景</div>
         </div>
-        <div class="task-card" onclick="selectTask(this,'report')" id="task-report">
-          <div class="task-icon">📊</div>
-          <div class="task-name">财务报表</div>
-          <div class="task-desc">结构化财务数据，自动生成分析图表</div>
-        </div>
-        <div class="task-card" onclick="selectTask(this,'custom')" id="task-custom">
+        <div class="task-card" onclick="selectTask(this,&#39;custom&#39;)" id="task-custom">
           <div class="task-icon">⚙️</div>
-          <div class="task-name">自定义任务</div>
-          <div class="task-desc">输入自定义提示词，处理任意文档</div>
+          <div class="task-name">高级自定义</div>
+          <div class="task-desc">由提示词驱动的临时任务入口，适合高级用户在标准流程之外补充分析</div>
         </div>
+      </div>
+      <div class="inline-note" id="taskHint">
+        单案件处理默认产出：`审计附表.xlsx` + `审计报告.md / .docx`。先处理当前材料，再生成 1 个 `AI审计结果_*`。
       </div>
     </div>
 
     <!-- MODEL SELECTOR -->
     <div class="card">
       <div class="section-header">
-        <span class="section-title">// 推理模型</span>
+        <span class="section-title">// 处理策略</span>
         <div class="section-line"></div>
       </div>
       <div class="model-row">
-        <div class="model-chip active" onclick="selectModel(this,'qwen3:14b')">
-          <span class="m-dot"></span> qwen3:14b <span style="color:var(--text-dim);font-size:0.65rem;">本地·推荐</span>
+        <div class="model-chip active" onclick="selectModel(this,&#39;local-standard&#39;)">
+          <span class="m-dot"></span> 本地标准 <span style="color:var(--text-dim);font-size:0.65rem;">默认</span>
         </div>
-        <div class="model-chip" onclick="selectModel(this,'gemma4:26b')">
-          <span class="m-dot"></span> gemma4:26b <span style="color:var(--text-dim);font-size:0.65rem;">本地·视觉</span>
+        <div class="model-chip" onclick="selectModel(this,&#39;local-vision&#39;)">
+          <span class="m-dot"></span> 本地增强 <span style="color:var(--text-dim);font-size:0.65rem;">票据/图片</span>
         </div>
-        <div class="model-chip" onclick="selectModel(this,'hybrid')">
-          <span class="m-dot"></span> 混合模式 <span style="color:var(--text-dim);font-size:0.65rem;">本地+云端兜底</span>
-        </div>
-        <div class="model-chip" onclick="selectModel(this,'qwen-vl-max')">
-          <span class="m-dot" style="background:var(--amber)"></span> Qwen-VL-Max <span style="color:var(--amber);font-size:0.65rem;">云端</span>
+        <div class="model-chip" onclick="selectModel(this,&#39;hybrid-review&#39;)">
+          <span class="m-dot" style="background:var(--amber)"></span> 混合兜底 <span style="color:var(--text-dim);font-size:0.65rem;">低置信度补强</span>
         </div>
       </div>
-      <div style="margin-top:10px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);" id="modelNote">
-        ● 本地推理 — 数据全程不出内网，处理完即释放，审计日志可查
+      <div class="inline-note" id="modelNote" style="font-size:0.68rem;">
+        ● 本地标准 — 数据全程不出内网，适合作为单案件处理的默认执行策略
       </div>
     </div>
 
@@ -908,15 +1442,16 @@ body::before {
         <span class="section-title">// 文件输入</span>
         <div class="section-line"></div>
       </div>
-      <div class="drop-zone" id="dropZone"
-           ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)"
-           onclick="document.getElementById('fileInput').click()">
-        <div class="drop-icon">📂</div>
-        <div class="drop-text">拖拽文件到此处，或点击选择</div>
-        <div class="drop-sub">支持 PDF / JPG / PNG / XLSX · 最大 50MB</div>
-        <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.xlsx" style="display:none" onchange="handleFileSelect(event)">
+      <div class="drop-zone" id="dropZone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="document.getElementById(&#39;fileInput&#39;).click()">
+        <div class="drop-icon" id="dropIcon">📂</div>
+        <div class="drop-text" id="dropText">拖拽案件材料到此处，或点击选择</div>
+        <div class="drop-sub" id="dropSub">优先支持 PDF / JPG / PNG / CSV，XLSX 仅作为参考材料或模板导入</div>
+        <input type="file" id="fileInput" multiple="" accept=".pdf,.jpg,.jpeg,.png,.xlsx,.csv" style="display:none" onchange="handleFileSelect(event)">
       </div>
-      <div class="file-list" id="fileList"></div>
+      <div class="file-list" id="fileList"><div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;"><button onclick="selectAllMounted()" style="font-size:0.72rem;padding:3px 10px;background:var(--bg);border:1px solid var(--green);color:var(--green);cursor:pointer;">全选</button><button onclick="clearMountedSelection()" style="font-size:0.72rem;padding:3px 10px;background:var(--bg);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;">取消全选</button><span style="font-size:0.72rem;color:var(--text-dim);" id="selCount">已选0个</span></div><div class="file-item" id="mf_0" onclick="toggleMountedFile(0,this)" style="cursor:pointer;"><span>📄</span><span class="f-name">.DS_Store</span><span class="f-size">6.0KB</span><span class="sel-mark" style="margin-left:auto;color:var(--text-dim);">○</span></div><div class="file-item" id="mf_1" onclick="toggleMountedFile(1,this)" style="cursor:pointer;"><span>📄</span><span class="f-name">2026040812080005842_pfqsydtl.xlsx</span><span class="f-size">174.1KB</span><span class="sel-mark" style="margin-left:auto;color:var(--text-dim);">○</span></div><div class="file-item" id="mf_2" onclick="toggleMountedFile(2,this)" style="cursor:pointer;"><span>📄</span><span class="f-name">248000024772026042100005800025000000001.pdf</span><span class="f-size">1.2MB</span><span class="sel-mark" style="margin-left:auto;color:var(--text-dim);">○</span></div><div class="file-item" id="mf_3" onclick="toggleMountedFile(3,this)" style="cursor:pointer;"><span>📄</span><span class="f-name">京公朝查财字【2026】55859号.xlsx</span><span class="f-size">67.0KB</span><span class="sel-mark" style="margin-left:auto;color:var(--text-dim);">○</span></div><div class="file-item" id="mf_4" onclick="toggleMountedFile(4,this)" style="cursor:pointer;"><span>📄</span><span class="f-name">对公明细查询-按账号查询_20260414145132.csv</span><span class="f-size">1.0MB</span><span class="sel-mark" style="margin-left:auto;color:var(--text-dim);">○</span></div></div>
+      <div class="inline-note warn" id="precheckNote">
+        提醒: PDF / 图片 / CSV 会优先进入主流程，XLSX 多数作为参考材料或模板导入，不参与 OCR 主链。本机文件导入当前用于本页预览验证。
+      </div>
 
       <!-- PROGRESS -->
       <div class="progress-wrap" id="progressWrap">
@@ -933,14 +1468,24 @@ body::before {
 
     <!-- ACTION -->
     <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;">
+          <div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:4px;font-family:var(--mono);">// 被审计主体（必填）</div>
+          <input id="primarySubject" placeholder="如：周贤" style="width:100%;background:var(--bg);border:1px solid var(--green);color:var(--text);padding:7px 8px;font-family:var(--mono);font-size:0.8rem;outline:none;box-sizing:border-box;">
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:4px;font-family:var(--mono);">// 关联主体（选填）</div>
+          <input id="relatedSubjects" placeholder="如：沙暴文化传播(北京)有限公司" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:7px 8px;font-family:var(--mono);font-size:0.8rem;outline:none;box-sizing:border-box;">
+        </div>
+      </div>
       <div>
-        <div style="font-size:0.75rem;color:var(--text-dim);margin-bottom:6px;font-family:var(--mono);">// 分析条件（选填，不填则按默认PLAYBOOK处理）</div>
-        <textarea id="analysisCondition" placeholder="例：嫌疑人周贤，重点分析公转私流水，时间范围2020-2024年&#10;例：按司法审计标准，出通用版报告" style="width:100%;height:80px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;font-family:var(--mono);font-size:0.78rem;resize:none;outline:none;box-sizing:border-box;"></textarea>
+        <div style="font-size:0.75rem;color:var(--text-dim);margin-bottom:6px;font-family:var(--mono);">// 案件要求（选填）</div>
+        <textarea id="analysisCondition" placeholder="例：案件名称=华北商贸资金核查；账号=6222xxxx；开户行=招商银行北京分行；输出口径=司法审计通用版" style="width:100%;height:60px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;font-family:var(--mono);font-size:0.78rem;resize:none;outline:none;box-sizing:border-box;"></textarea>
       </div>
       <div style="display:flex;gap:12px;align-items:center;">
-        <button class="btn btn-primary" style="padding:12px 32px;font-size:0.8rem;" onclick="startProcess()">▶ 开始处理</button>
+        <button class="btn btn-primary" style="padding:12px 32px;font-size:0.8rem;" onclick="startProcess()">▶ 生成单案件结果</button>
         <button class="btn btn-secondary" onclick="resetAll()">重置</button>
-        <div style="font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);" id="actionNote">请先选择文件或挂载存储</div>
+        <div style="font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);" id="actionNote">存储已挂载，可生成单案件结果（审计附表 + 审计报告）</div>
       </div>
     </div>
 
@@ -952,11 +1497,184 @@ body::before {
     <div class="download-bar" id="downloadBar">
       <div>
         <div class="dl-info" id="dlInfo">处理完成 — 0 条记录</div>
-        <div class="dl-sub">数据已在本地处理，无副本残留</div>
+        <div class="dl-sub" id="dlSub">数据已在本地处理，无副本残留</div>
       </div>
       <div style="display:flex;gap:8px;">
-        <button class="btn btn-primary" onclick="downloadResult()">↓ 下载 Excel</button>
-        <button class="btn btn-secondary" onclick="viewAudit()">查看审计日志</button>
+        <button class="btn btn-primary" id="openPathBtn" onclick="openResultDir()">打开结果目录</button>
+        <button class="btn btn-secondary" id="copyPathBtn" onclick="copyResultPath()">复制共享路径</button>
+        <button class="btn btn-secondary" id="showFilesBtn" onclick="showResultFiles()">展开本次产物</button>
+        <button class="btn btn-secondary" onclick="viewAudit()">查看本次记录</button>
+      </div>
+    </div>
+
+    <div class="result-assets" id="resultAssets">
+      <div class="result-assets-title">本次产物</div>
+      <div class="result-assets-grid" id="resultAssetsGrid"></div>
+    </div>
+
+    <div class="refine-panel" id="refinePanel">
+      <div class="refine-head">
+        <div>
+          <div class="refine-title">继续加工本次结果</div>
+          <div class="refine-sub">自动承接当前案件上下文，用于改写报告、补充说明或聚焦异常交易。</div>
+        </div>
+        <button class="btn btn-secondary" onclick="focusRefineToAssistant()" style="padding:6px 10px;font-size:0.72rem;">切到案件助手</button>
+      </div>
+      <div class="refine-tags" id="refineTags">
+        <div class="refine-tag">当前案件：未绑定</div>
+        <div class="refine-tag">结果状态：等待生成</div>
+        <div class="refine-tag">处理策略：本地标准</div>
+      </div>
+      <div class="refine-messages" id="refineMessages">
+        <div style="align-self:flex-start;background:var(--panel);border:1px solid var(--border);padding:8px 10px;max-width:88%;font-size:0.76rem;font-family:var(--mono);color:var(--text-dim);">
+          结果生成后，可直接在这里继续加工当前案件，不需要跳到左侧助手。
+        </div>
+      </div>
+      <div class="refine-status" id="refineStatus">
+        <div class="refine-status-left">
+          <div class="refine-status-title" id="refineStatusTitle">微调处理中</div>
+          <div class="refine-status-meta" id="refineStatusMeta">系统正在基于当前案件生成新版本。</div>
+        </div>
+        <div class="refine-spinner" id="refineSpinner"></div>
+      </div>
+      <div class="refine-input-row">
+        <input id="refineInput" class="refine-input" type="text" placeholder="例如：只保留大额异常交易，改成司法审计口吻" onkeydown="if(event.key===&#39;Enter&#39;)sendRefine()">
+        <button class="btn btn-primary refine-send-btn" onclick="sendRefine()" style="padding:9px 16px;">发送微调</button>
+      </div>
+    </div>
+
+    </div>
+
+    <div class="prep-shell" id="prepSection">
+      <div class="card">
+        <div class="section-header">
+          <span class="section-title">// 材料整理</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="inline-note">
+          先整理材料，再回到“单案件处理”点击“生成单案件结果”。当前阶段优先做扫描、去重提醒、超长 PDF 预警和标准目录建议，不直接覆盖原始材料。
+        </div>
+        <div style="margin-top:10px;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+          <span style="font-family:var(--mono);font-size:0.75rem;color:var(--text-dim);white-space:nowrap;">案件文件夹：</span>
+          <input id="sourceSubDirInput" type="text" placeholder="留空=扫全部，填写如：周贤查账" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:5px 8px;font-family:var(--mono);font-size:0.78rem;outline:none;max-width:320px;">
+        </div>
+        <div class="prep-actions" style="margin-top:8px;">
+          <button class="btn btn-primary prep-action-btn" id="prepScanBtn" onclick="runMaterialPrep()">扫描当前挂载材料</button>
+          <button class="btn btn-secondary prep-action-btn" id="prepOrganizeBtn" onclick="organizeMountedMaterials()">生成整理目录</button>
+          <button class="btn btn-secondary" onclick="syncPrepToAssistant()">同步建议到案件助手</button>
+          <button class="btn btn-secondary" onclick="switchTab('task')">返回任务执行</button>
+        </div>
+      </div>
+
+      <div class="prep-summary" id="prepSummary">
+        <div class="prep-stat">
+          <div class="prep-stat-label">文件总数</div>
+          <div class="prep-stat-value" id="prepCountFiles">0</div>
+        </div>
+        <div class="prep-stat">
+          <div class="prep-stat-label">目录总数</div>
+          <div class="prep-stat-value" id="prepCountDirs">0</div>
+        </div>
+        <div class="prep-stat">
+          <div class="prep-stat-label">重复提醒</div>
+          <div class="prep-stat-value" id="prepCountDup">0</div>
+        </div>
+        <div class="prep-stat">
+          <div class="prep-stat-label">高风险项</div>
+          <div class="prep-stat-value" id="prepCountRisk">0</div>
+        </div>
+      </div>
+
+      <div class="prep-grid">
+        <div class="card">
+          <div class="section-header">
+            <span class="section-title">// 整理建议</span>
+            <div class="section-line"></div>
+          </div>
+          <div class="prep-list" id="prepAdviceList">
+            <div class="prep-item">
+              <div class="prep-item-title">等待扫描当前共享目录</div>
+              <div class="prep-item-meta">挂载共享目录后点击“扫描当前挂载材料”，系统会给出压缩包、重复文件、超长 PDF 和推荐送审目录建议。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-header">
+            <span class="section-title">// 推荐送审结构</span>
+            <div class="section-line"></div>
+          </div>
+          <div class="prep-note" id="prepStructureHint">客户名称_年月/
+├── 01_广发/
+├── 02_建设/
+├── 03_民生/
+└── 00_说明区/
+
+建议先把原始材料整理成以上结构，再回到“单案件处理”生成单案件结果。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prep-shell" id="summarySection">
+      <div class="card">
+        <div class="section-header">
+          <span class="section-title">// 结果汇总</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="inline-note">
+          这里不是处理原始材料，而是读取已经生成好的历史 `AI审计结果_*`，再收拢成 1 个总汇总目录，避免把原始材料和最终结果混在一起。
+        </div>
+        <div class="prep-actions" style="margin-top:14px;">
+          <button class="btn btn-primary prep-action-btn" id="summaryScanBtn" onclick="runCaseSummaryScan()">扫描历史结果目录</button>
+          <button class="btn btn-secondary prep-action-btn" id="summaryBuildBtn" onclick="buildCaseSummaryBundle()">生成汇总目录</button>
+          <button class="btn btn-secondary" onclick="switchTab('task')">返回任务执行</button>
+        </div>
+      </div>
+
+      <div class="prep-summary" id="summarySummary">
+        <div class="prep-stat">
+          <div class="prep-stat-label">结果目录</div>
+          <div class="prep-stat-value" id="summaryCountDirs">0</div>
+        </div>
+        <div class="prep-stat">
+          <div class="prep-stat-label">含报告</div>
+          <div class="prep-stat-value" id="summaryCountReports">0</div>
+        </div>
+        <div class="prep-stat">
+          <div class="prep-stat-label">含附表</div>
+          <div class="prep-stat-value" id="summaryCountSheets">0</div>
+        </div>
+        <div class="prep-stat">
+          <div class="prep-stat-label">待人工复核</div>
+          <div class="prep-stat-value" id="summaryCountRisk">0</div>
+        </div>
+      </div>
+
+      <div class="prep-grid">
+        <div class="card">
+          <div class="section-header">
+            <span class="section-title">// 可汇总案件</span>
+            <div class="section-line"></div>
+          </div>
+          <div class="prep-list" id="summaryList">
+            <div class="prep-item">
+              <div class="prep-item-title">等待扫描历史结果目录</div>
+              <div class="prep-item-meta">点击“扫描历史结果目录”后，这里会列出当前共享目录下可进入总汇总流程的案件结果。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-header">
+            <span class="section-title">// 汇总建议</span>
+            <div class="section-line"></div>
+          </div>
+          <div class="prep-note" id="summaryHint">建议总汇总顺序：
+1. 只选 `AI审计结果_*` 进入汇总，不要把原始材料重新投入
+2. 优先汇总附表 `.xlsx / .csv`
+3. 再把各案件 `审计报告.md / .docx` 做人工复核后出总报告
+4. 大案建议按批次汇总，不要一次吞全部历史结果</div>
+        </div>
       </div>
     </div>
 
@@ -965,10 +1683,11 @@ body::before {
   <!-- AUDIT LOG PANEL -->
   <aside class="audit-panel">
     <div class="audit-header">
-      <div class="audit-title">// AUDIT LOG</div>
+      <div class="audit-title">// 本地留痕</div>
       <div class="audit-controls">
         <button class="audit-btn" onclick="clearLog()">清空</button>
-        <button class="audit-btn" onclick="exportLog()">导出</button>
+        <button class="audit-btn" onclick="exportLog()">导出留痕</button>
+        <button class="audit-btn" onclick="openAdminLog()">管理员诊断</button>
       </div>
     </div>
     <div class="audit-log" id="auditLog"></div>
@@ -993,15 +1712,110 @@ body::before {
   </aside>
 </div>
 
+<div class="modal-backdrop" id="caseRecordModal" onclick="if(event.target===this)closeCaseRecord()">
+  <div class="case-record-modal">
+    <div class="case-record-head">
+      <div class="case-record-title">本次记录</div>
+      <button class="btn btn-secondary" onclick="closeCaseRecord()">关闭</button>
+    </div>
+    <div class="case-record-body" id="caseRecordBody"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="adminLogModal" onclick="if(event.target===this)closeAdminLog()">
+  <div class="case-record-modal">
+    <div class="case-record-head">
+      <div class="case-record-title">管理员诊断日志</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary" onclick="refreshAdminLog()" style="padding:6px 10px;">刷新</button>
+        <button class="btn btn-secondary" onclick="closeAdminLog()">关闭</button>
+      </div>
+    </div>
+    <div class="case-record-body">
+      <div class="case-record-section">
+        <div class="case-record-label">说明</div>
+        <div class="case-record-value" id="adminLogMeta">用于管理员排障，读取盒子本地任务日志，不面向终端客户默认展示。</div>
+      </div>
+      <div class="case-record-section">
+        <div class="case-record-label">最近日志</div>
+        <div class="case-record-list" id="adminLogBody">
+          <div class="case-record-item">正在加载...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── STATE ──
-let selectedTask = 'ocr';
-let selectedModel = 'qwen3:14b';
+let selectedTask = 'case';
+let selectedModel = 'local-standard';
 let files = [];
+window.mountedFiles = [];
+window.selectedMountedFiles = [];
+
+// 自动保存/回填挂载参数
+(function() {
+  const fields = ['mountHost', 'mountPath', 'mountUser'];
+  document.addEventListener('DOMContentLoaded', function() {
+    fields.forEach(function(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const saved = localStorage.getItem(scopedStorageKey('n1_' + id));
+      if (saved) el.value = saved;
+      el.addEventListener('input', function() {
+        localStorage.setItem(scopedStorageKey('n1_' + id), el.value);
+      });
+    });
+  });
+})();
 let logCount = 0;
 let processedCount = 0;
 let apiCallCount = 0;
 let isMounted = false;
+let activeCaseId = '';
+let lastTaskResults = [];
+let refineWritebackBusy = false;
+let caseTimeline = [];
+let recommendedMountConfig = null;
+let adminLogLoadedAt = '';
+let lastPrepReport = null;
+let lastPrepOrganizeResult = null;
+let lastPrepScanReport = null;
+let lastSummaryScan = null;
+let lastSummaryBuildResult = null;
+let selectedSummaryDirs = [];
+let prepScanBusy = false;
+let prepOrganizeBusy = false;
+let prepActiveAction = 'scan';
+let lastClientNetworkHint = null;
+const deploymentProfile = {
+  nodeLabel: 'N1-109',
+  nodeInstanceId: 'N1-109-202605',
+  joinCode: 'JZ-N1-109',
+  localPanel: '192.168.2.109:3000',
+  publicPanel: 'n2.jzkjbj.cn/panel',
+  computeEndpoint: '100.89.188.128',
+  clusterStrategy: '统一入口'
+};
+let currentCaseContext = {
+  caseName: '未命名案件',
+  customerName: '',
+  customerKey: '',
+  accountNo: '',
+  cardNo: '',
+  bankName: '',
+  reportBaseName: '',
+  primaryReportFile: '',
+  resultStatus: '等待生成',
+  selectedCount: 0,
+  strategy: '本地标准',
+  selectedFiles: [],
+  lastTaskId: '',
+  resultDir: '',
+  sharePath: '',
+  resultFiles: []
+};
 
 // ── CLOCK ──
 function updateClock() {
@@ -1011,6 +1825,251 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 updateClock();
+
+function currentEntryLabel() {
+  const host = window.location.host || deploymentProfile.localPanel;
+  const pathName = window.location.pathname || '/panel';
+  return host + pathName;
+}
+
+function isPrivateHost(hostname) {
+  return /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[0-1])\.)/.test(hostname || '');
+}
+
+function isPublicEntryMode() {
+  return !isPrivateHost(window.location.hostname || '');
+}
+
+function getClientStorageScope() {
+  var entry = currentEntryLabel();
+  var ua = (navigator.userAgent || '').replace(/\s+/g, ' ').slice(0, 120);
+  return btoa(unescape(encodeURIComponent(entry + '|' + ua))).replace(/=+$/g, '');
+}
+
+function scopedStorageKey(name) {
+  return 'jz_scope_' + getClientStorageScope() + '_' + name;
+}
+
+function saveClientMountDraft(host, sharePath, user, pass) {
+  try {
+    sessionStorage.setItem(scopedStorageKey('smb_host'), host || '');
+    sessionStorage.setItem(scopedStorageKey('smb_path'), sharePath || '');
+    sessionStorage.setItem(scopedStorageKey('smb_pass'), pass || '');
+    localStorage.setItem(scopedStorageKey('smb_host'), host || '');
+    localStorage.setItem(scopedStorageKey('smb_share'), sharePath || '');
+    localStorage.setItem(scopedStorageKey('smb_user'), user || '');
+  } catch (e) {}
+}
+
+function restoreClientMountDraft(options) {
+  var opts = options || {};
+  var shouldApply = opts.applyToInputs !== false;
+  var host = '';
+  var sharePath = '';
+  var pass = '';
+  var user = '';
+  try {
+    host = sessionStorage.getItem(scopedStorageKey('smb_host'))
+      || localStorage.getItem(scopedStorageKey('smb_host'))
+      || '';
+    sharePath = sessionStorage.getItem(scopedStorageKey('smb_path'))
+      || localStorage.getItem(scopedStorageKey('smb_share'))
+      || '';
+    pass = sessionStorage.getItem(scopedStorageKey('smb_pass')) || '';
+    user = localStorage.getItem(scopedStorageKey('smb_user')) || '';
+  } catch (e) {}
+  if (shouldApply && host) document.getElementById('mountHost').value = host;
+  if (shouldApply && sharePath) document.getElementById('mountPath').value = sharePath;
+  if (shouldApply && user) document.getElementById('mountUser').value = user;
+  if (shouldApply && pass) {
+    var passInput = document.getElementById('mountPassword');
+    if (passInput) passInput.value = pass;
+  }
+  return {
+    host: host,
+    sharePath: sharePath,
+    user: user,
+    hasDraft: Boolean(host || sharePath || user || pass)
+  };
+}
+
+function buildLocalDeviceRecommendation(clientHint, clientDraft) {
+  return {
+    host: clientHint && clientHint.clientIp ? clientHint.clientIp : '',
+    share: clientDraft && clientDraft.sharePath ? clientDraft.sharePath : '',
+    user: clientDraft && clientDraft.user ? clientDraft.user : ''
+  };
+}
+
+function getCurrentDeviceKey(clientHint) {
+  var ip = clientHint && clientHint.clientIp ? clientHint.clientIp : '';
+  if (!ip) return '';
+  return scopedStorageKey('device_' + ip.replaceAll('.', '_'));
+}
+
+function saveCurrentDeviceMountProfile(clientHint, sharePath, user) {
+  var key = getCurrentDeviceKey(clientHint || lastClientNetworkHint);
+  if (!key) return;
+  try {
+    localStorage.setItem(key, JSON.stringify({
+      sharePath: sharePath || '',
+      user: user || ''
+    }));
+  } catch (e) {}
+}
+
+function restoreCurrentDeviceMountProfile(clientHint) {
+  var key = getCurrentDeviceKey(clientHint || lastClientNetworkHint);
+  if (!key) return { sharePath: '', user: '', hasProfile: false };
+  try {
+    var raw = localStorage.getItem(key);
+    if (!raw) return { sharePath: '', user: '', hasProfile: false };
+    var data = JSON.parse(raw);
+    return {
+      sharePath: data && data.sharePath ? data.sharePath : '',
+      user: data && data.user ? data.user : '',
+      hasProfile: Boolean((data && data.sharePath) || (data && data.user))
+    };
+  } catch (e) {
+    return { sharePath: '', user: '', hasProfile: false };
+  }
+}
+
+function updateCurrentDeviceResetButton(clientHint, hasProfile) {
+  var btn = document.getElementById('clearCurrentDeviceMountBtn');
+  if (!btn) return;
+  if (!isPublicEntryMode() && clientHint && clientHint.clientIp) {
+    btn.style.display = '';
+    btn.textContent = hasProfile ? '清当前设备记录' : '清当前设备记录';
+    btn.disabled = !hasProfile;
+    btn.style.opacity = hasProfile ? '1' : '0.45';
+    btn.title = hasProfile
+      ? ('清除 ' + clientHint.clientIp + ' 这台电脑记住的共享目录和账号')
+      : '当前这台设备还没有独立记录可清除';
+    return;
+  }
+  btn.style.display = 'none';
+  btn.disabled = false;
+  btn.style.opacity = '1';
+  btn.title = '';
+}
+
+function loadServerRememberedMountProfile() {
+  return fetch('/api/client-mount-profile')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      return data && data.ok && data.profile ? data.profile : null;
+    })
+    .catch(function() {
+      return null;
+    });
+}
+
+function renderDeploymentProfile() {
+  const host = window.location.hostname || '';
+  const entry = currentEntryLabel();
+  const chip = document.getElementById('deviceChip');
+  const entryNode = document.getElementById('deviceEntryAddress');
+  const gatewayNode = document.getElementById('deviceGateway');
+  const noteNode = document.getElementById('deviceNote');
+  const local = isPrivateHost(host);
+  if (chip) chip.textContent = local ? '本地模式' : deploymentProfile.clusterStrategy;
+  if (entryNode) entryNode.textContent = entry;
+  if (gatewayNode) gatewayNode.textContent = deploymentProfile.publicPanel;
+  if (noteNode) {
+    noteNode.textContent = local
+      ? '当前为盒子本地直连入口。后续扩容到 N3/N4/N5 时，建议统一通过阿里云入口域名接入，盒子只负责本地处理与回写。'
+      : '当前为统一入口访问模式。后续新增 N3/N4/N5 时，建议继续由阿里云入口统一收口，再按节点路由到各盒子。';
+  }
+}
+
+function renderMountedFileList() {
+  const list = document.getElementById('fileList');
+  if (!list) return;
+  window.selectedMountedFiles = [];
+  const fileItems = (window.mountedFiles || []).filter(function(f) { return !f.isDir; });
+  list.innerHTML = '<div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">' +
+    '<button onclick="selectAllMounted()" style="font-size:0.72rem;padding:3px 10px;background:var(--bg);border:1px solid var(--green);color:var(--green);cursor:pointer;">全选</button>' +
+    '<button onclick="clearMountedSelection()" style="font-size:0.72rem;padding:3px 10px;background:var(--bg);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;">取消全选</button>' +
+    '<span style="font-size:0.72rem;color:var(--text-dim);" id="selCount">已选0个</span>' +
+    '</div>' +
+    fileItems.map(function(f, i) {
+      return '<div class="file-item" id="mf_' + i + '" onclick="toggleMountedFile(' + i + ',this)" style="cursor:pointer;">' +
+        '<span>📄</span><span class="f-name">' + f.name + '</span>' +
+        '<span class="f-size">' + formatBytes(f.size) + '</span>' +
+        '<span class="sel-mark" style="margin-left:auto;color:var(--text-dim);">○</span></div>';
+    }).join('');
+}
+
+function applyMountedState(host, sharePath, filesFromServer) {
+  window.mountedFiles = Array.isArray(filesFromServer) ? filesFromServer : [];
+  isMounted = true;
+  const s = document.getElementById('mountStatus');
+  if (s) {
+    s.className = 'mount-status connected';
+    s.innerHTML = '<span class="dot"></span> 已挂载 SMB://' + host + sharePath + ' · ' + window.mountedFiles.length + '个文件';
+  }
+  const storageStatus = document.querySelector('.status-bar .status-item:nth-child(3)');
+  if (storageStatus) {
+    storageStatus.innerHTML = '<span class="dot"></span> 存储已挂载';
+  }
+  document.getElementById('actionNote').textContent = '存储已挂载，可生成单案件结果（审计附表 + 审计报告）';
+  renderMountedFileList();
+  renderSingleCaseRiskHint(analyzeSingleCaseRisk(getCurrentSelectedEntries()));
+}
+
+function setMountTransitionState(host, sharePath) {
+  const s = document.getElementById('mountStatus');
+  if (s) {
+    s.className = 'mount-status';
+    s.innerHTML = '<span class="dot"></span> 正在切换挂载到 SMB://' + host + sharePath + '，请稍候确认结果';
+  }
+  document.getElementById('actionNote').textContent = '正在切换挂载，请稍候...';
+}
+
+function setMountFailedState(host, sharePath, reason) {
+  window.mountedFiles = [];
+  window.selectedMountedFiles = [];
+  isMounted = false;
+  const s = document.getElementById('mountStatus');
+  if (s) {
+    s.className = 'mount-status';
+    s.innerHTML = '<span class="dot"></span> 挂载失败：SMB://' + host + sharePath + '。请检查共享名、账号密码或网络连通性';
+  }
+  const storageStatus = document.querySelector('.status-bar .status-item:nth-child(3)');
+  if (storageStatus) {
+    storageStatus.innerHTML = '<span class="dot amber"></span> 存储未挂载';
+  }
+  renderMountedFileList();
+  document.getElementById('actionNote').textContent = reason
+    ? ('本次挂载失败：' + reason)
+    : '本次挂载失败，请修改连接信息后重试';
+}
+
+function restoreMountedState() {
+  if (isPublicEntryMode()) {
+    var mountStatus = document.getElementById('mountStatus');
+    if (mountStatus) {
+      mountStatus.className = 'mount-status';
+      mountStatus.innerHTML = '<span class="dot"></span> 公网入口不自动继承其他设备挂载状态，请按当前电脑重新挂载';
+    }
+    return Promise.resolve(false);
+  }
+  return fetch('/api/smb-files')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data || !data.ok) return false;
+      lastPrepScanReport = data;
+      const cfg = data.config || {};
+      const host = cfg.host || document.getElementById('mountHost').value || '未配置';
+      const sharePath = cfg.share ? '/' + String(cfg.share).replace(/^\/+/, '') : (document.getElementById('mountPath').value || '');
+      applyMountedState(host, sharePath, data.files || []);
+      return true;
+    })
+    .catch(function() {
+      return false;
+    });
+}
 
 // ── LOG ──
 function addLog(type, msg) {
@@ -1030,13 +2089,156 @@ function addLog(type, msg) {
   document.getElementById('logCount').textContent = logCount;
 }
 
+function localTraceAsText() {
+  return Array.from(document.getElementById('auditLog').querySelectorAll('.log-line'))
+    .map(function(line) { return line.textContent.trim(); })
+    .join('\n');
+}
+
+function addCaseTimeline(stage, detail) {
+  caseTimeline.push({
+    at: new Date().toLocaleTimeString('zh-CN', {hour12:false}),
+    stage: stage,
+    detail: detail
+  });
+}
+
+function renderRecommendedMount(config) {
+  const box = document.getElementById('recommendedMount');
+  const title = box ? box.querySelector('.recommended-mount-title') : null;
+  const desc = document.getElementById('recommendedMountDesc');
+  if (!box || !desc) return;
+  if (!config || !config.host || !config.share) {
+    box.classList.remove('show');
+    return;
+  }
+  recommendedMountConfig = config;
+  if (isPublicEntryMode()) {
+    if (title) title.textContent = '盒子最近一次连接记录';
+    desc.textContent = '最近一次成功挂载：' + config.host + ' / ' + config.share + (config.user ? (' / ' + config.user) : '') + '。该记录不一定适用于当前这台电脑，请先核对后再套用。';
+  } else {
+    if (title) title.textContent = '推荐连接';
+    desc.textContent = config.host + ' / ' + config.share + (config.user ? (' / ' + config.user) : '');
+  }
+  box.classList.add('show');
+}
+
+function renderDetectedClientMountHint(clientHint, clientDraft) {
+  const box = document.getElementById('recommendedMount');
+  const title = box ? box.querySelector('.recommended-mount-title') : null;
+  const desc = document.getElementById('recommendedMountDesc');
+  if (!box || !desc || !clientHint || !clientHint.clientIp) return false;
+  var deviceProfile = restoreCurrentDeviceMountProfile(clientHint);
+  recommendedMountConfig = {
+    host: clientHint.clientIp,
+    share: deviceProfile && deviceProfile.hasProfile ? deviceProfile.sharePath : (clientDraft && clientDraft.sharePath ? clientDraft.sharePath : ''),
+    user: deviceProfile && deviceProfile.hasProfile ? deviceProfile.user : (clientDraft && clientDraft.user ? clientDraft.user : '')
+  };
+  updateCurrentDeviceResetButton(clientHint, Boolean(deviceProfile && deviceProfile.hasProfile));
+  if (title) title.textContent = '推荐连接';
+  desc.textContent = '已识别当前访问设备 IP：' + clientHint.clientIp + '。共享目录和账号会优先使用这台设备自己上次成功使用的记录；如果这是第一次使用，请手动补齐一次。';
+  box.classList.add('show');
+  return true;
+}
+
+function loadClientNetworkHint() {
+  return fetch('/api/client-network-hint')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      lastClientNetworkHint = data && data.ok ? data : null;
+      return lastClientNetworkHint;
+    })
+    .catch(function() {
+      lastClientNetworkHint = null;
+      return null;
+    });
+}
+
+function applyRecommendedMount() {
+  if (!recommendedMountConfig) return;
+  document.getElementById('mountHost').value = recommendedMountConfig.host || '';
+  document.getElementById('mountPath').value = recommendedMountConfig.share || '';
+  document.getElementById('mountUser').value = recommendedMountConfig.user || '';
+  var passInput = document.getElementById('mountPassword');
+  if (passInput) {
+    passInput.value = '';
+    passInput.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  addLog('INFO', (isPublicEntryMode() ? '已套用盒子最近一次连接记录: ' : '已套用推荐连接: ') + recommendedMountConfig.host + '/' + recommendedMountConfig.share);
+  document.getElementById('actionNote').textContent = isPublicEntryMode()
+    ? '已套用盒子最近一次连接记录，请先核对并重新输入当前设备密码后再挂载'
+    : '已套用当前设备推荐连接；共享目录和账号若为空，请按这台设备实际信息补齐后再挂载';
+}
+
+function clearCurrentDeviceMountProfile() {
+  if (isPublicEntryMode() || !lastClientNetworkHint || !lastClientNetworkHint.clientIp) return;
+  fetch('/api/client-mount-profile', { method: 'DELETE' })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var key = getCurrentDeviceKey(lastClientNetworkHint);
+      try {
+        if (key) localStorage.removeItem(key);
+      } catch (e) {}
+      document.getElementById('mountPath').value = '';
+      document.getElementById('mountUser').value = '';
+      var passInput = document.getElementById('mountPassword');
+      if (passInput) passInput.value = '';
+      updateCurrentDeviceResetButton(lastClientNetworkHint, false);
+      addLog('INFO', '已清除当前设备挂载记录: ' + lastClientNetworkHint.clientIp);
+      document.getElementById('actionNote').textContent = '当前设备记录已清除，请重新填写这台电脑的共享目录、账号和密码';
+      return loadRecommendedMount();
+    })
+    .catch(function(e) {
+      addLog('WARN', '清除当前设备记录失败: ' + e.message);
+    });
+}
+
+function loadRecommendedMount() {
+  var clientDraft = restoreClientMountDraft({ applyToInputs: isPublicEntryMode() });
+  updateCurrentDeviceResetButton(null, false);
+  if (clientDraft && clientDraft.hasDraft && isPublicEntryMode()) {
+    var box = document.getElementById('recommendedMount');
+    var title = box ? box.querySelector('.recommended-mount-title') : null;
+    var desc = document.getElementById('recommendedMountDesc');
+    if (box && desc) {
+      if (title) title.textContent = '当前设备上次输入';
+      desc.textContent = (clientDraft.host || '未填写地址') + ' / ' + (clientDraft.sharePath || '未填写共享目录') + (clientDraft.user ? (' / ' + clientDraft.user) : '') + '。这是当前浏览器本机草稿，不代表盒子最近一次全局挂载。';
+      box.classList.add('show');
+    }
+  }
+  Promise.all([
+    loadClientNetworkHint(),
+    loadServerRememberedMountProfile(),
+    fetch('/api/smb-config').then(function(r) { return r.json(); }).catch(function() { return null; })
+  ])
+    .then(function(results) {
+      var networkHint = results[0];
+      var serverProfile = results[1];
+      var data = results[2];
+      if (networkHint && networkHint.ok && networkHint.isPrivate && !isPublicEntryMode()) {
+        if (serverProfile && (serverProfile.sharePath || serverProfile.user)) {
+          saveCurrentDeviceMountProfile(networkHint, serverProfile.sharePath || '', serverProfile.user || '');
+        }
+        if (renderDetectedClientMountHint(networkHint, clientDraft)) {
+          return;
+        }
+      }
+      if (data && data.ok && data.config) {
+        if (!(clientDraft && clientDraft.hasDraft && isPublicEntryMode())) {
+          renderRecommendedMount(data.config);
+        }
+      }
+    })
+    .catch(function() {});
+}
+
 // ── INIT LOG ──
 setTimeout(() => {
   addLog('INFO', '系统初始化完成');
-  addLog('INFO', 'N1盒子 192.168.2.109 在线');
-  addLog('INFO', '算力中心 192.168.2.111 连通，延迟 3ms');
-  addLog('DATA', 'Ollama 服务就绪，模型 qwen3:14b 已加载');
-  addLog('INFO', '等待存储挂载或文件上传...');
+  addLog('INFO', 'N1盒子 ' + deploymentProfile.localPanel + ' 在线');
+  addLog('INFO', '算力中心 ' + deploymentProfile.computeEndpoint + ' 连通，延迟 3ms');
+  addLog('DATA', '本地策略已就绪，默认使用单案件处理标准流程');
+  addLog('INFO', '等待挂载案件材料或上传文件...');
 }, 300);
 
 // ── MOUNT STORAGE ──
@@ -1066,16 +2268,25 @@ setTimeout(() => {
 //   }, 600);
 // }
 // 
-// function useUpload() {
-//   document.getElementById('fileInput').click();
-// }
-// 
+function useUpload() {
+  addLog('INFO', '切换到本机文件导入（本页预览）');
+  document.getElementById('fileInput').click();
+}
+
 // ── TASK ──
 function selectTask(el, task) {
   document.querySelectorAll('.task-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   selectedTask = task;
   addLog('INFO', `切换任务模式: ${el.querySelector('.task-name').textContent}`);
+  const hints = {
+    case: '单案件处理默认产出审计附表和审计报告，适合作为当前材料的单案入口',
+    invoice: '票据台账已切到独立结果链，当前会输出票据台账 Excel 与材料清单，不再套用审计报告主链',
+    contract: '合同审查已接入独立任务上下文；当前底层仍复用主链，后续再拆条款抽取与风险审查后端',
+    custom: '高级自定义已接入独立任务上下文；当前底层仍复用主链，更适合补充规则与输出口径'
+  };
+  const note = document.getElementById('taskHint');
+  if (note) note.textContent = hints[task] || '';
 }
 
 // ── MODEL ──
@@ -1084,14 +2295,20 @@ function selectModel(el, model) {
   el.classList.add('active');
   selectedModel = model;
   const notes = {
-    'qwen3:14b': '● 本地推理 — 数据全程不出内网，处理完即释放，审计日志可查',
-    'gemma4:26b': '● 本地视觉模型 — 支持图片直接识别，数据不出内网',
-    'hybrid': '⚡ 混合模式 — 优先本地，低置信度内容送云端兜底（脱敏后传输）',
-    'qwen-vl-max': '⚠ 云端模式 — 数据加密传输至阿里云，国内服务器，符合数据安全法'
+    'local-standard': '● 本地标准 — 数据全程不出内网，适合作为单案件处理默认策略',
+    'local-vision': '● 本地增强 — 针对票据图片与扫描件做更强识别，仍保留在本地',
+    'hybrid-review': '⚡ 混合兜底 — 默认先走本地，低置信度内容再进入补强策略'
+  };
+  const labels = {
+    'local-standard': '本地标准',
+    'local-vision': '本地增强',
+    'hybrid-review': '混合兜底'
   };
   document.getElementById('modelNote').textContent = notes[model] || '';
-  addLog(model.includes('vl-max') ? 'WARN' : 'INFO',
-    `模型切换: ${model} · ${model.includes('local') || !model.includes('vl') ? '本地推理' : '云端推理'}`);
+  currentCaseContext.strategy = labels[model] || model;
+  addLog(model === 'hybrid-review' ? 'WARN' : 'INFO',
+    `处理策略切换: ${el.textContent.trim()}`);
+  refreshRefinePanel();
 }
 
 // ── FILE HANDLING ──
@@ -1111,13 +2328,49 @@ function handleFileSelect(e) {
   addFiles(Array.from(e.target.files));
 }
 
+function inspectImageFile(file) {
+  return new Promise(function(resolve) {
+    if (!file || !file.type || !file.type.startsWith('image/')) {
+      resolve(null);
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = function() {
+      const meta = {
+        width: img.naturalWidth || 0,
+        height: img.naturalHeight || 0,
+        tooSmall: (img.naturalWidth || 0) < 1000 || (img.naturalHeight || 0) < 1400
+      };
+      URL.revokeObjectURL(url);
+      resolve(meta);
+    };
+    img.onerror = function() {
+      URL.revokeObjectURL(url);
+      resolve({ width: 0, height: 0, tooSmall: false, unreadable: true });
+    };
+    img.src = url;
+  });
+}
+
 function addFiles(newFiles) {
   newFiles.forEach(f => {
+    f._jzMeta = null;
     files.push(f);
-    addLog('DATA', `文件加载: ${f.name} (${formatBytes(f.size)}) — 仅存于本机内存`);
-    renderFileList();
+    addLog('DATA', `案件材料加载: ${f.name} (${formatBytes(f.size)}) — 仅存于本机内存`);
+    inspectImageFile(f).then(function(meta) {
+      if (!meta) return;
+      f._jzMeta = meta;
+      if (meta.tooSmall) {
+        addLog('WARN', `图片分辨率偏低: ${f.name} (${meta.width}x${meta.height})，建议改用原图、扫描件或PDF`);
+      }
+      renderFileList();
+      updateDropZoneState();
+    });
   });
-  document.getElementById('actionNote').textContent = `${files.length} 个文件待处理`;
+  renderFileList();
+  updateDropZoneState();
+  document.getElementById('actionNote').textContent = `${files.length} 个文件待预检`;
 }
 
 function renderFileList() {
@@ -1127,7 +2380,9 @@ function renderFileList() {
       <span>📄</span>
       <span class="f-name">${f.name}</span>
       <span class="f-size">${formatBytes(f.size)}</span>
-      <span class="f-remove" onclick="removeFile(${i})">✕</span>
+      ${f._jzMeta && f._jzMeta.tooSmall ? `<span class="f-size" style="color:#ffb366;">低清晰度 ${f._jzMeta.width}x${f._jzMeta.height}</span>` : ''}
+      <span class="f-state">已加入</span>
+      <button class="f-remove" onclick="event.stopPropagation(); removeFile(${i})">移除</button>
     </div>
   `).join('');
 }
@@ -1136,12 +2391,100 @@ function removeFile(i) {
   addLog('INFO', `移除文件: ${files[i].name}`);
   files.splice(i, 1);
   renderFileList();
+  updateDropZoneState();
+}
+
+function updateDropZoneState() {
+  const zone = document.getElementById('dropZone');
+  const icon = document.getElementById('dropIcon');
+  const text = document.getElementById('dropText');
+  const sub = document.getElementById('dropSub');
+  if (!zone || !icon || !text || !sub) return;
+  if (files.length > 0) {
+    const lowResCount = files.filter(function(f) { return f._jzMeta && f._jzMeta.tooSmall; }).length;
+    zone.classList.add('has-files');
+    icon.textContent = '✓';
+    text.textContent = `已接收 ${files.length} 个文件，可直接开始处理`;
+    sub.textContent = lowResCount > 0
+      ? `检测到 ${lowResCount} 个低清晰度图片，建议改用原图、扫描件或PDF后再处理。`
+      : '文件已进入当前任务，仅保存在本机内存；下方列表可继续移除或补充。';
+  } else {
+    zone.classList.remove('has-files');
+    icon.textContent = '📂';
+    text.textContent = '拖拽案件材料到此处，或点击选择';
+    sub.textContent = '优先支持 PDF / JPG / PNG / CSV，XLSX 仅作为参考材料或模板导入';
+  }
 }
 
 function formatBytes(b) {
   if (b < 1024) return b + 'B';
   if (b < 1024*1024) return (b/1024).toFixed(1) + 'KB';
   return (b/1024/1024).toFixed(1) + 'MB';
+}
+
+function getAuditModeValue() {
+  if (selectedModel === 'local-standard') return 'local';
+  if (selectedModel === 'local-vision') return 'vision';
+  return 'hybrid';
+}
+
+function getCurrentSelectedEntries() {
+  if (!isMounted) {
+    return Array.isArray(files) ? files.slice() : [];
+  }
+  var explicitSelection = window.selectedMountedFiles && window.selectedMountedFiles.length > 0;
+  return explicitSelection
+    ? window.selectedMountedFiles.filter(function(f) { return !f.isDir; })
+    : window.mountedFiles.filter(function(f) { return !f.isDir; });
+}
+
+function analyzeSingleCaseRisk(entries) {
+  var list = Array.isArray(entries) ? entries : [];
+  var names = list.map(function(item) { return String(item && item.name || ''); });
+  var hasProvidedAuditSheet = names.some(function(name) { return /审计附表.*\.xlsx$/i.test(name); });
+  var hasCsv = names.some(function(name) { return /\.csv$/i.test(name); });
+  var pdfs = names.filter(function(name) { return /\.pdf$/i.test(name); });
+  var longPdfCandidates = pdfs.filter(function(name) { return /meger|merge|流水|交易明细/i.test(name); });
+  var likelyOcrSlowPath = !hasProvidedAuditSheet && !hasCsv && pdfs.length > 0;
+  return {
+    count: list.length,
+    hasProvidedAuditSheet: hasProvidedAuditSheet,
+    hasCsv: hasCsv,
+    pdfCount: pdfs.length,
+    longPdfCount: longPdfCandidates.length,
+    likelyOcrSlowPath: likelyOcrSlowPath,
+  };
+}
+
+function renderSingleCaseRiskHint(risk) {
+  var note = document.getElementById('precheckNote');
+  if (!note) return;
+  if (!risk || !risk.count) {
+    note.textContent = '提醒: PDF / 图片 / CSV 会优先进入主流程，XLSX 多数作为参考材料或模板导入，不参与 OCR 主链。本机文件导入当前用于本页预览验证。';
+    note.className = 'inline-note warn';
+    return;
+  }
+  if (risk.likelyOcrSlowPath) {
+    note.textContent = '预警: 当前这批材料没有 CSV，也没有现成审计附表，且包含 PDF。系统大概率会进入 OCR 慢路径，长 PDF 可能导致进度长时间停在后段。建议先拆成 CSV/Excel 优先批次，或把长 PDF 单独第二轮处理。';
+    note.className = 'inline-note warn';
+    return;
+  }
+  if (risk.hasCsv || risk.hasProvidedAuditSheet) {
+    note.textContent = '当前这批材料可优先走快速附表分支。建议先用这批材料生成单案件结果，再把长 PDF 放第二轮。';
+    note.className = 'inline-note';
+    return;
+  }
+  note.textContent = '提醒: PDF / 图片 / CSV 会优先进入主流程，XLSX 多数作为参考材料或模板导入，不参与 OCR 主链。本机文件导入当前用于本页预览验证。';
+  note.className = 'inline-note warn';
+}
+
+function fileToBase64(file) {
+  return new Promise(function(resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = function() { resolve(String(reader.result || '')); };
+    reader.onerror = function() { reject(new Error('文件读取失败')); };
+    reader.readAsDataURL(file);
+  });
 }
 
 // ── PROCESS ──
@@ -1151,110 +2494,158 @@ function startProcess() {
     return;
   }
 
-  // 真实调用：有选中的挂载文件
-  if (window.selectedMountedFiles && window.selectedMountedFiles.length > 0) {
-    const filesToProcess = window.selectedMountedFiles;
-    addLog('INFO', '开始处理 ' + filesToProcess.length + ' 个文件 · 任务: ' + selectedTask);
-    addLog('DATA', '数据来源: SMB挂载目录 · 数据未离开客户设备');
-    
+  var risk = analyzeSingleCaseRisk(getCurrentSelectedEntries());
+  if (risk.likelyOcrSlowPath) {
+    addLog('WARN', '开始前预警：当前材料会进入 OCR 慢路径，可能长时间停在后段进度。建议先跑 CSV/现成附表，长 PDF 第二轮单独处理。');
+  } else if (risk.hasCsv || risk.hasProvidedAuditSheet) {
+    addLog('INFO', '开始前检查：当前材料可优先走快速附表分支。');
+  }
+
+  // 真实调用：SMB 挂载模式只提交当前选中的文件。
+  // 如果用户没有显式勾选，则默认按当前共享目录内全部可处理文件提交一次任务。
+  if (isMounted) {
+    const explicitSelection = window.selectedMountedFiles && window.selectedMountedFiles.length > 0;
+    const selectedEntries = explicitSelection
+      ? window.selectedMountedFiles.filter(function(f){ return !f.isDir; })
+      : window.mountedFiles.filter(function(f){ return !f.isDir; });
+    const selectedNames = selectedEntries.map(function(f){ return f.name; });
+    const meta = parseAnalysisConditionMeta();
+    currentCaseContext.selectedCount = selectedNames.length;
+    currentCaseContext.selectedFiles = selectedNames.slice();
+    Object.assign(currentCaseContext, meta);
+    currentCaseContext.resultStatus = '处理中';
+    caseTimeline = [];
+    addCaseTimeline('案件提交', '开始处理 SMB 共享目录，共 ' + selectedNames.length + ' 个文件');
+    addCaseTimeline('材料清单', selectedNames.join('，'));
+    refreshRefinePanel();
+    persistCaseContext();
+    addLog('INFO', '开始处理 SMB 共享目录 · 工作流: ' + selectedTask + ' · 本次提交 ' + selectedNames.length + ' 个文件');
+    addLog('DATA', '案件材料来源: SMB挂载目录 · 本次文件: ' + selectedNames.join(', '));
+
     const wrap = document.getElementById('progressWrap');
     wrap.classList.add('show');
+    document.getElementById('resultArea').classList.remove('show');
+    document.getElementById('downloadBar').classList.remove('show');
     document.getElementById('progressFill').style.width = '10%';
     document.getElementById('progressPct').textContent = '10%';
-    document.getElementById('progressLabel').textContent = '正在提交任务...';
+      document.getElementById('progressLabel').textContent = '正在提交案件任务...';
 
-    // 逐个提交文件任务
-    const smbHost = document.getElementById('mountHost').value;
     const smbPath = document.getElementById('mountPath').value;
-    
-    Promise.all(filesToProcess.map(function(f) {
-      const smbFilePath = '/mnt/smb_n1/' + f.name;
-      return fetch('/api/task-start', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          filePath: smbFilePath,
-          fileName: f.name,
-          fileSize: f.size,
-          task: selectedTask,
-          condition: document.getElementById('analysisCondition') ? document.getElementById('analysisCondition').value : ''
-        })
-      }).then(r => r.json());
-    })).then(function(results) {
-      const taskIds = results.filter(r => r.ok).map(r => r.taskId);
-      addLog('INFO', '已提交 ' + taskIds.length + ' 个任务，等待处理...');
-      document.getElementById('progressFill').style.width = '30%';
-      document.getElementById('progressPct').textContent = '30%';
-      document.getElementById('progressLabel').textContent = '墨影处理中，请稍候（约3-5分钟）...';
-      
-      // 轮询任务状态
-      pollTasks(taskIds, 0);
+    const primarySubject = (document.getElementById('primarySubject') || {}).value || '';
+    const relatedSubjects = (document.getElementById('relatedSubjects') || {}).value || '';
+    fetch('/api/task-start', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        filePath: '/mnt/smb_client',
+        fileName: 'SMB共享目录',
+        fileSize: 0,
+        task: selectedTask,
+        condition: document.getElementById('analysisCondition') ? document.getElementById('analysisCondition').value : '',
+        outputDir: smbPath,
+        selectedFiles: selectedNames,
+        caseId: activeCaseId || '',
+        caseContext: buildCaseContextPayload(),
+        customerName: primarySubject,
+        relatedSubjects: relatedSubjects
+      })
+    }).then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function(result) {
+      if (!result.ok) throw new Error(result.error || '提交失败');
+      if (result.caseId) activeCaseId = result.caseId;
+      currentCaseContext.lastTaskId = result.taskId;
+      addCaseTimeline('任务已创建', '任务ID：' + result.taskId);
+      refreshRefinePanel();
+      addLog('INFO', '已提交真实任务: ' + result.taskId);
+      document.getElementById('progressFill').style.width = '25%';
+      document.getElementById('progressPct').textContent = '25%';
+      document.getElementById('progressLabel').textContent = '案件处理中，请稍候...';
+      pollTasks([result.taskId], 0);
     }).catch(function(e) {
       addLog('WARN', '提交失败: ' + e.message);
+      document.getElementById('progressFill').style.width = '0%';
+      document.getElementById('progressPct').textContent = '0%';
+      document.getElementById('progressLabel').textContent = '请求失败：' + e.message;
     });
     return;
   }
-
-  const steps = [
-    { label: '挂载读取', duration: 800 },
-    { label: 'OCR预处理', duration: 1200 },
-    { label: '模型推理', duration: 2000 },
-    { label: '结构化解析', duration: 800 },
-    { label: '写回结果', duration: 500 },
-  ];
 
   const wrap = document.getElementById('progressWrap');
   wrap.classList.add('show');
   document.getElementById('resultArea').classList.remove('show');
   document.getElementById('downloadBar').classList.remove('show');
 
-  const stepsEl = document.getElementById('progressSteps');
-  stepsEl.innerHTML = steps.map(s => `<div class="step">${s.label}</div>`).join('');
-  const stepEls = stepsEl.querySelectorAll('.step');
+  addLog('INFO', `开始处理 — 工作流: ${selectedTask} · 策略: ${selectedModel}`);
+  addLog('DATA', `输入: ${files.length > 0 ? files.length + '个文件' : '挂载存储'} · 数据留存在本地控制域`);
+  const meta = parseAnalysisConditionMeta();
+  currentCaseContext.selectedCount = files.length;
+  currentCaseContext.selectedFiles = files.map(function(f) { return f.name; });
+  Object.assign(currentCaseContext, meta);
+  currentCaseContext.resultStatus = '处理中';
+  caseTimeline = [];
+  addCaseTimeline('案件提交', '开始处理本地上传材料，共 ' + files.length + ' 个文件');
+  addCaseTimeline('材料清单', currentCaseContext.selectedFiles.join('，') || '未记录');
+  refreshRefinePanel();
+  persistCaseContext();
+  document.getElementById('progressSteps').innerHTML = '';
+  document.getElementById('progressFill').style.width = '8%';
+  document.getElementById('progressPct').textContent = '8%';
+  document.getElementById('progressLabel').textContent = '正在读取本机上传文件...';
 
-  addLog('INFO', `开始处理 — 任务: ${selectedTask} · 模型: ${selectedModel}`);
-  addLog('DATA', `输入: ${files.length > 0 ? files.length + '个文件' : '挂载存储'} · 数据留存本地`);
-
-  let total = steps.reduce((a,s) => a+s.duration, 0);
-  let elapsed = 0;
-  let stepIdx = 0;
-
-  const logMsgs = [
-    `挂载读取目标文件，只读模式`,
-    `图像预处理: 灰度化/去噪/倾斜校正`,
-    `${selectedModel} 推理中，内存使用 8.2GB，无网络调用`,
-    `解析 JSON → 结构化交易记录`,
-    `结果写回 /output/result.xlsx，原始文件未修改`
-  ];
-
-  function runStep(i) {
-    if (i >= steps.length) {
-      finishProcess();
-      return;
-    }
-    stepEls[i].className = 'step active';
-    addLog('INFO', logMsgs[i]);
-    if (i === 2 && selectedModel !== 'qwen-vl-max') {
-      addLog('DATA', `推理日志: token_in=1247 token_out=312 · 无数据上传`);
-    }
-    if (i === 2 && selectedModel === 'qwen-vl-max') {
+  Promise.all(files.map(function(file) {
+    return fileToBase64(file).then(function(contentBase64) {
+      return {
+        name: file.name,
+        size: file.size,
+        type: file.type || '',
+        contentBase64: contentBase64
+      };
+    });
+  })).then(function(uploadPayload) {
+    document.getElementById('progressFill').style.width = '18%';
+    document.getElementById('progressPct').textContent = '18%';
+    document.getElementById('progressLabel').textContent = '正在提交真实 OCR 任务...';
+    return fetch('/api/task-upload-start', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        files: uploadPayload,
+        task: selectedTask,
+        condition: document.getElementById('analysisCondition') ? document.getElementById('analysisCondition').value : '',
+        caseId: activeCaseId || '',
+        caseContext: buildCaseContextPayload(),
+        auditMode: getAuditModeValue()
+      })
+    });
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(result) {
+    if (!result.ok) throw new Error(result.error || '提交失败');
+    if (result.caseId) activeCaseId = result.caseId;
+    currentCaseContext.lastTaskId = result.taskId;
+    addCaseTimeline('任务已创建', '任务ID：' + result.taskId);
+    addLog('INFO', '本机上传任务已提交: ' + result.taskId + ' · OCR模式: ' + getAuditModeValue());
+    if (selectedModel === 'hybrid-review') {
       apiCallCount++;
       document.getElementById('statApi').textContent = apiCallCount;
-      document.getElementById('statLocal').textContent = '0%';
-      addLog('WARN', `云端API调用: qwen-vl-max · 加密传输 · 阿里云国内节点`);
+      document.getElementById('statLocal').textContent = '补强中';
+    } else {
+      document.getElementById('statLocal').textContent = '100%';
     }
-
-    setTimeout(() => {
-      elapsed += steps[i].duration;
-      stepEls[i].className = 'step done';
-      document.getElementById('progressFill').style.width = (elapsed/total*100) + '%';
-      document.getElementById('progressPct').textContent = Math.round(elapsed/total*100) + '%';
-      document.getElementById('progressLabel').textContent = steps[i].label + ' 完成';
-      runStep(i+1);
-    }, steps[i].duration);
-  }
-
-  runStep(0);
+    refreshRefinePanel();
+    document.getElementById('progressFill').style.width = '25%';
+    document.getElementById('progressPct').textContent = '25%';
+    document.getElementById('progressLabel').textContent = 'OCR处理中，请稍候...';
+    pollTasks([result.taskId], 0);
+  }).catch(function(e) {
+    addLog('WARN', '本机上传任务提交失败: ' + e.message);
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressPct').textContent = '0%';
+    document.getElementById('progressLabel').textContent = '请求失败：' + e.message;
+  });
 }
 
 function finishProcess() {
@@ -1264,6 +2655,8 @@ function finishProcess() {
   addLog('INFO', `处理完成 · ${processedCount} 条记录 · 0 bytes 上传至外部`);
   addLog('DATA', `内存已释放，无文件副本残留`);
   addLog('INFO', `结果已写入本地: /output/result_${Date.now()}.xlsx`);
+  currentCaseContext.resultStatus = '已生成附表与报告';
+  persistCaseContext();
 
   // Show result table
   const resultArea = document.getElementById('resultArea');
@@ -1296,26 +2689,288 @@ function finishProcess() {
   const dlBar = document.getElementById('downloadBar');
   dlBar.classList.add('show');
   document.getElementById('dlInfo').textContent = `处理完成 — ${mockData.length} 条记录，1 条待人工复核`;
+  document.getElementById('dlSub').textContent = '当前是本页预览结果；真实案件任务完成后，这里会显示共享结果目录';
+  const refinePanel = document.getElementById('refinePanel');
+  if (refinePanel) refinePanel.classList.add('show');
+  const refineMessages = document.getElementById('refineMessages');
+  if (refineMessages) {
+    refineMessages.innerHTML = '';
+    appendAssistantMessage('refineMessages', '当前结果已经绑定到本次案件。你可以直接在这里继续改写报告、筛选异常交易或补充说明。', 'assistant');
+  }
+  refreshRefinePanel();
 }
 
-function downloadResult() {
-  addLog('INFO', '导出 Excel: result.xlsx · 仅下载到本设备');
-  alert('演示模式：实际部署后将下载真实Excel文件');
+function getPrimaryResultMeta() {
+  if (!Array.isArray(lastTaskResults) || lastTaskResults.length === 0) return null;
+  return lastTaskResults.find(function(item) {
+    return item && item.result && item.result.outDir;
+  }) || lastTaskResults[0] || null;
+}
+
+function flashButtonText(buttonId, nextText, fallbackText) {
+  const btn = document.getElementById(buttonId);
+  if (!btn) return;
+  btn.textContent = nextText;
+  setTimeout(function() {
+    btn.textContent = fallbackText;
+  }, 1600);
+}
+
+function getCurrentVersionLabel() {
+  if (currentCaseContext && currentCaseContext.sharePath) {
+    const parts = currentCaseContext.sharePath.split('\\').filter(Boolean);
+    if (parts.length) return parts[parts.length - 1];
+  }
+  if (currentCaseContext && currentCaseContext.resultDir) {
+    const parts = currentCaseContext.resultDir.split('/').filter(Boolean);
+    if (parts.length) return parts[parts.length - 1];
+  }
+  return '当前结果';
+}
+
+function renderCaseRecord() {
+  const body = document.getElementById('caseRecordBody');
+  if (!body) return;
+  const files = currentCaseContext.selectedFiles && currentCaseContext.selectedFiles.length
+    ? currentCaseContext.selectedFiles
+    : [];
+  const outputs = currentCaseContext.resultFiles && currentCaseContext.resultFiles.length
+    ? currentCaseContext.resultFiles
+    : [];
+  const timelineHtml = caseTimeline.length
+    ? caseTimeline.map(function(item) {
+        return '<div class="case-record-item">[' + item.at + '] ' + item.stage + '：' + item.detail + '</div>';
+      }).join('')
+    : '<div class="case-record-item">当前还没有形成完整的本次记录。</div>';
+  const filesHtml = files.length
+    ? files.map(function(name) { return '<div class="case-record-item">' + escapeHtml(name) + '</div>'; }).join('')
+    : '<div class="case-record-item">本次未记录材料清单</div>';
+  const outputsHtml = outputs.length
+    ? outputs.map(function(name) { return '<div class="case-record-item">' + escapeHtml(name) + '</div>'; }).join('')
+    : '<div class="case-record-item">当前还没有产物清单</div>';
+
+  body.innerHTML = ''
+    + '<div class="case-record-section">'
+    +   '<div class="case-record-label">案件概览</div>'
+    +   '<div class="case-record-value">'
+    +     '案件：' + (currentCaseContext.caseName || '未命名案件') + '\n'
+    +     '状态：' + (currentCaseContext.resultStatus || '等待生成') + '\n'
+    +     '策略：' + (currentCaseContext.strategy || '本地标准') + '\n'
+    +     '案件ID：' + (activeCaseId || '未分配')
+    +   '</div>'
+    + '</div>'
+    + '<div class="case-record-section">'
+    +   '<div class="case-record-label">本次材料</div>'
+    +   '<div class="case-record-list">'
+    +     filesHtml
+    +   '</div>'
+    + '</div>'
+    + '<div class="case-record-section">'
+    +   '<div class="case-record-label">结果与版本</div>'
+    +   '<div class="case-record-value">'
+    +     '当前目录：' + (currentCaseContext.sharePath || currentCaseContext.resultDir || '未生成') + '\n'
+    +     '当前版本：' + getCurrentVersionLabel()
+    +   '</div>'
+    +   '<div class="case-record-list" style="margin-top:10px;">'
+    +     outputsHtml
+    +   '</div>'
+    + '</div>'
+    + '<div class="case-record-section">'
+    +   '<div class="case-record-label">本次过程</div>'
+    +   '<div class="case-record-list">' + timelineHtml + '</div>'
+    + '</div>';
+}
+
+function openCaseRecord() {
+  renderCaseRecord();
+  document.getElementById('caseRecordModal').classList.add('show');
+}
+
+function closeCaseRecord() {
+  document.getElementById('caseRecordModal').classList.remove('show');
+}
+
+function setRefineStatus(state, meta) {
+  const wrap = document.getElementById('refineStatus');
+  const title = document.getElementById('refineStatusTitle');
+  const sub = document.getElementById('refineStatusMeta');
+  const spinner = document.getElementById('refineSpinner');
+  if (!wrap || !title || !sub || !spinner) return;
+  if (!state || state === 'idle') {
+    wrap.classList.remove('show');
+    return;
+  }
+  wrap.classList.add('show');
+  if (state === 'running') {
+    title.textContent = '微调处理中';
+    sub.textContent = meta || '系统正在基于当前案件生成新版本。';
+    spinner.style.display = '';
+  } else if (state === 'done') {
+    title.textContent = '微调已完成';
+    sub.textContent = meta || ('当前已切换到 ' + getCurrentVersionLabel());
+    spinner.style.display = 'none';
+  } else if (state === 'error') {
+    title.textContent = '微调未完成';
+    sub.textContent = meta || '本次微调未能写回，请查看本次记录。';
+    spinner.style.display = 'none';
+  }
+}
+
+function escapeHtml(text) {
+  return String(text || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function focusPanel(el) {
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  el.classList.remove('panel-flash');
+  void el.offsetWidth;
+  el.classList.add('panel-flash');
+}
+
+function renderResultAssets() {
+  const wrap = document.getElementById('resultAssets');
+  const grid = document.getElementById('resultAssetsGrid');
+  if (!wrap || !grid) return;
+  const result = getPrimaryResultMeta();
+  const outDir = result && result.result ? result.result.outDir : '';
+  const sharePath = result && result.result ? result.result.sharePath : '';
+  const files = result && result.result && Array.isArray(result.result.files) ? result.result.files : [];
+  if (!outDir && !sharePath && files.length === 0) {
+    wrap.classList.remove('show');
+    grid.innerHTML = '';
+    return;
+  }
+  const boxes = [];
+  if (sharePath) {
+    boxes.push(
+      '<div class="result-assets-box">Windows 打开路径：\n' + escapeHtml(sharePath) + '</div>'
+    );
+  }
+  if (outDir) {
+    boxes.push(
+      '<div class="result-assets-box">N1 本地结果目录：\n' + escapeHtml(outDir) + '</div>'
+    );
+  }
+  if (files.length) {
+    boxes.push(
+      '<div class="result-assets-box">产物清单：\n' + files.map(function(name) { return ' - ' + escapeHtml(name); }).join('\n') + '</div>'
+    );
+  }
+  boxes.push(
+    '<div class="result-assets-note">建议优先在 Windows 资源管理器中打开共享路径；浏览器本身通常不能直接替你拉起资源管理器或 WPS。</div>'
+  );
+  grid.innerHTML = boxes.join('');
+  wrap.classList.add('show');
+}
+
+function copyText(text) {
+  if (!text) return Promise.reject(new Error('empty'));
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(text);
+  }
+  const area = document.createElement('textarea');
+  area.value = text;
+  area.style.position = 'fixed';
+  area.style.left = '-9999px';
+  document.body.appendChild(area);
+  area.select();
+  try {
+    document.execCommand('copy');
+    document.body.removeChild(area);
+    return Promise.resolve();
+  } catch (e) {
+    document.body.removeChild(area);
+    return Promise.reject(e);
+  }
+}
+
+function copyResultPath() {
+  const result = getPrimaryResultMeta();
+  const outDir = result && result.result ? result.result.outDir : '';
+  const sharePath = result && result.result ? result.result.sharePath : '';
+  const targetPath = sharePath || outDir;
+  if (!targetPath) {
+    addLog('WARN', '当前还没有可复制的结果路径');
+    document.getElementById('dlSub').textContent = '结果目录将在任务成功后显示在这里';
+    return;
+  }
+  copyText(targetPath).then(function() {
+    addLog('INFO', '结果路径已复制: ' + targetPath);
+    document.getElementById('dlSub').textContent = sharePath
+      ? 'Windows 共享路径已复制，可直接粘贴到资源管理器打开'
+      : '结果目录已复制，可直接到共享目录打开';
+    flashButtonText('copyPathBtn', '已复制', '复制共享路径');
+  }).catch(function() {
+    addLog('WARN', '结果路径复制失败，请手动查看：' + targetPath);
+    document.getElementById('dlSub').textContent = '结果路径：' + targetPath;
+  });
+}
+
+function showResultFiles() {
+  renderResultAssets();
+  flashButtonText('showFilesBtn', '已展开', '展开本次产物');
+  addLog('INFO', '已展开本次产物清单');
+  focusPanel(document.getElementById('resultAssets'));
+}
+
+function toFileUrlFromSharePath(sharePath) {
+  if (!sharePath) return '';
+  return 'file:///' + sharePath.replace(/^\\\\/, '').replaceAll('\\', '/');
+}
+
+function openResultDir() {
+  const result = getPrimaryResultMeta();
+  const outDir = result && result.result ? result.result.outDir : '';
+  const sharePath = result && result.result ? result.result.sharePath : '';
+  const openTarget = toFileUrlFromSharePath(sharePath);
+  if (!sharePath && !outDir) {
+    addLog('WARN', '当前还没有可打开的结果目录');
+    document.getElementById('dlSub').textContent = '结果目录将在任务成功后显示在这里';
+    return;
+  }
+
+  if (openTarget) {
+    try {
+      const win = window.open(openTarget, '_blank');
+      if (win) win.opener = null;
+      addLog('INFO', '尝试打开结果目录: ' + sharePath);
+      document.getElementById('dlSub').textContent = '已尝试打开结果目录；如浏览器未拉起资源管理器，将自动复制共享路径';
+      flashButtonText('openPathBtn', '正在打开', '打开结果目录');
+    } catch (e) {
+      addLog('WARN', '浏览器未能直接打开结果目录: ' + e.message);
+    }
+  }
+
+  setTimeout(function() {
+    copyResultPath();
+    const sub = document.getElementById('dlSub');
+    if (sub) {
+      sub.textContent = sharePath
+        ? ('如未自动打开，请到 AI 审计共享文件夹中查看；共享路径已复制：' + sharePath)
+        : ('如未自动打开，请到文件共享文件夹中查看本次结果：' + outDir);
+    }
+  }, 900);
 }
 
 function viewAudit() {
-  addLog('INFO', '查看完整审计报告');
+  addLog('INFO', '打开本次记录面板');
+  openCaseRecord();
 }
 
 function exportLog() {
-  const lines = Array.from(document.getElementById('auditLog').querySelectorAll('.log-line'))
-    .map(l => l.textContent.trim()).join('\n');
+  const lines = localTraceAsText();
   const blob = new Blob([lines], {type:'text/plain'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `n1-audit-${Date.now()}.log`;
+  a.download = `n1-local-trace-${Date.now()}.log`;
   a.click();
-  addLog('INFO', '审计日志已导出');
+  addLog('INFO', '本地留痕已导出');
 }
 
 function clearLog() {
@@ -1324,37 +2979,134 @@ function clearLog() {
   document.getElementById('logCount').textContent = '0';
 }
 
+function renderAdminLog(lines) {
+  const body = document.getElementById('adminLogBody');
+  if (!body) return;
+  if (!lines || !lines.length) {
+    body.innerHTML = '<div class="case-record-item">当前还没有可读取的后台诊断日志。</div>';
+    return;
+  }
+  body.innerHTML = lines.map(function(line) {
+    return '<div class="case-record-item">' + escapeHtml(line) + '</div>';
+  }).join('');
+}
+
+function refreshAdminLog() {
+  const meta = document.getElementById('adminLogMeta');
+  const body = document.getElementById('adminLogBody');
+  if (body) {
+    body.innerHTML = '<div class="case-record-item">正在读取盒子本地任务日志...</div>';
+  }
+  return fetch('/api/audit-log?limit=120')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      adminLogLoadedAt = new Date().toLocaleTimeString('zh-CN', {hour12:false});
+      if (meta) {
+        meta.textContent = data && data.file
+          ? ('日志来源：' + data.file + ' · 最近刷新：' + adminLogLoadedAt)
+          : ('最近刷新：' + adminLogLoadedAt);
+      }
+      renderAdminLog(data && data.lines ? data.lines : []);
+      return data;
+    }).catch(function(e) {
+      if (meta) meta.textContent = '读取失败：' + e.message;
+      renderAdminLog([]);
+      return null;
+    });
+}
+
+function openAdminLog() {
+  addLog('INFO', '打开管理员诊断日志');
+  document.getElementById('adminLogModal').classList.add('show');
+  refreshAdminLog();
+}
+
+function closeAdminLog() {
+  document.getElementById('adminLogModal').classList.remove('show');
+}
+
 function resetAll() {
   files = [];
+  caseTimeline = [];
   renderFileList();
+  updateDropZoneState();
   document.getElementById('progressWrap').classList.remove('show');
   document.getElementById('resultArea').classList.remove('show');
   document.getElementById('downloadBar').classList.remove('show');
+  document.getElementById('resultAssets').classList.remove('show');
+  document.getElementById('refinePanel').classList.remove('show');
   document.getElementById('progressFill').style.width = '0%';
   document.getElementById('progressSteps').innerHTML = '';
   document.getElementById('actionNote').textContent = '请先选择文件或挂载存储';
+  currentCaseContext = {
+    caseName: '未命名案件',
+    customerName: '',
+    customerKey: '',
+    accountNo: '',
+    cardNo: '',
+    bankName: '',
+    reportBaseName: '',
+    primaryReportFile: '',
+    resultStatus: '等待生成',
+    selectedCount: 0,
+    strategy: '本地标准',
+    selectedFiles: [],
+    lastTaskId: '',
+    resultDir: '',
+    sharePath: '',
+    resultFiles: []
+  };
+  activeCaseId = '';
+  lastTaskResults = [];
+  document.getElementById('dlSub').textContent = '数据已在本地处理，无副本残留';
+  document.getElementById('resultAssetsGrid').innerHTML = '';
+  setRefineStatus('idle');
+  refreshRefinePanel();
   addLog('INFO', '已重置，等待新任务');
 }
 
-function switchTab(tab) {
+function switchTab(tab, navEl) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  const fallbackNav = Array.from(document.querySelectorAll('.nav-item')).find(function(n) {
+    return (n.textContent || '').indexOf(
+      tab === 'task' ? '任务执行' :
+      tab === 'storage' ? '存储挂载' :
+      tab === 'model' ? '模型配置' :
+      tab === 'audit' ? '审计报告' :
+      tab === 'prep' ? '材料整理' :
+      tab === 'summary' ? '结果汇总' :
+      tab === 'chat' ? '案件助手' :
+      tab === 'device' ? '设备信息' : ''
+    ) >= 0;
+  });
+  const activeNav = navEl || fallbackNav;
+  if (activeNav) activeNav.classList.add('active');
   addLog('INFO', `切换到: ${tab}`);
-  const sections = ['storageSection','taskSection','modelSection','auditSection','deviceSection','chatSection'];
+  const sections = ['taskSection','prepSection','summarySection','chatSection'];
   sections.forEach(s => {
     const el = document.getElementById(s);
     if (el) el.style.display = 'none';
   });
   const map = {
     task: 'taskSection',
-    storage: 'storageSection', 
-    model: 'modelSection',
-    audit: 'auditSection',
-    device: 'deviceSection',
+    storage: 'taskSection', 
+    model: 'taskSection',
+    audit: 'taskSection',
+    prep: 'prepSection',
+    summary: 'summarySection',
+    device: 'taskSection',
     chat: 'chatSection'
   };
   const target = document.getElementById(map[tab]);
-  if (target) target.style.display = tab === 'chat' ? 'flex' : 'block';
+  if (target) {
+    target.style.display = tab === 'chat' || tab === 'prep' || tab === 'summary' ? 'flex' : 'block';
+    if (tab === 'prep') target.classList.add('show');
+    if (tab === 'summary') target.classList.add('show');
+  }
+  const prepSection = document.getElementById('prepSection');
+  if (prepSection && tab !== 'prep') prepSection.classList.remove('show');
+  const summarySection = document.getElementById('summarySection');
+  if (summarySection && tab !== 'summary') summarySection.classList.remove('show');
   // chat模式隐藏右侧面板
   const rightPanel = document.querySelector('.audit-panel');
   if (rightPanel) rightPanel.style.display = tab === 'chat' ? 'none' : '';
@@ -1363,38 +3115,832 @@ function switchTab(tab) {
   if (mainLayout) mainLayout.style.gridTemplateColumns = tab === 'chat' ? '220px 1fr 0px' : '220px 1fr 320px';
 }
 
+function normalizeMountedPath(name) {
+  return String(name || '').replace(/\\/g, '/');
+}
+
+function detectBankByText(text) {
+  const source = normalizeMountedPath(text);
+  if (/广发|cgb/i.test(source)) return '广发';
+  if (/建设|建行|ccb/i.test(source)) return '建设';
+  if (/民生|cmbc/i.test(source)) return '民生';
+  if (/招商|招行|cmb/i.test(source)) return '招商';
+  if (/农业|农行|abc/i.test(source)) return '农业';
+  if (/工商|工行|icbc/i.test(source)) return '工商';
+  if (/中国银行|中行|boc/i.test(source)) return '中国银行';
+  if (/交通银行|交行|bocom/i.test(source)) return '交通';
+  if (/邮储|邮政储蓄|psbc/i.test(source)) return '邮储';
+  if (/平安/i.test(source)) return '平安';
+  if (/上海银行/i.test(source)) return '上海银行';
+  return '';
+}
+
+function buildPrepBankHints(files) {
+  const hintMap = new Map();
+  (files || []).forEach(function(file) {
+    const bank = detectBankByText(file.name);
+    if (!bank) return;
+    const base = normalizeMountedPath(file.name).split('/').pop().toLowerCase();
+    if (!hintMap.has(base)) hintMap.set(base, new Map());
+    const bankMap = hintMap.get(base);
+    bankMap.set(bank, (bankMap.get(bank) || 0) + 1);
+  });
+  return hintMap;
+}
+
+function detectBankFromPath(name, hintMap) {
+  const direct = detectBankByText(name);
+  if (direct) return direct;
+  const base = normalizeMountedPath(name).split('/').pop().toLowerCase();
+  const hinted = hintMap && hintMap.get(base);
+  if (hinted && hinted.size) {
+    return Array.from(hinted.entries()).sort(function(a, b) { return b[1] - a[1]; })[0][0];
+  }
+  return '未归类';
+}
+
+function summarizePrepAdvice(report) {
+  const advice = [];
+  if (!report.files.length) {
+    advice.push({ title: '当前没有可扫描材料', meta: '请先挂载共享目录，再进入材料整理。', level: 'muted' });
+    return advice;
+  }
+  advice.push({
+    title: '建议先生成“客户名_年月_整理后”目录',
+    meta: '原始材料保持不动，审计主链只吃整理后的标准目录，后续回写结果也更清楚。',
+    level: 'ok'
+  });
+  if (report.archives.length) {
+    advice.push({
+      title: '发现压缩包 ' + report.archives.length + ' 份',
+      meta: '建议先解压，再把最终文件放入 01_广发 / 02_建设 / 03_民生。不要让压缩包和解压结果同时存在。',
+      level: 'warn'
+    });
+  }
+  if (report.archiveInsights && report.archiveInsights.length) {
+    const passwordCount = report.archiveInsights.filter(function(item) { return item.code === 'password_required'; }).length;
+    const readyCount = report.archiveInsights.filter(function(item) { return item.code === 'auto_extract_ready'; }).length;
+    const otherCount = report.archiveInsights.filter(function(item) { return item.code !== 'password_required' && item.code !== 'auto_extract_ready'; }).length;
+    advice.push({
+      title: '压缩包预检',
+      meta: '可自动解压 ' + readyCount + ' 份；疑似带密码 ' + passwordCount + ' 份；其他需人工处理 ' + otherCount + ' 份。',
+      level: passwordCount || otherCount ? 'warn' : 'ok'
+    });
+  }
+  if (report.duplicates.length) {
+    advice.push({
+      title: '发现疑似重复材料 ' + report.duplicates.length + ' 组',
+      meta: report.duplicates.slice(0, 3).map(function(item) { return item.base + ' ×' + item.count; }).join('；'),
+      level: 'warn'
+    });
+  }
+  if (report.longPdfs.length) {
+    advice.push({
+      title: '发现超长 PDF ' + report.longPdfs.length + ' 份',
+      meta: '这类文件建议单独处理，首轮不要和标准 Excel/CSV 混跑，避免整单卡在 92%。',
+      level: 'warn'
+    });
+  }
+  advice.push({
+    title: '推荐首轮送审顺序',
+    meta: '先跑 Excel/CSV + 少量关键 PDF；建行超长 PDF 放第二轮单独测；顶层文件和子目录副本二选一。',
+    level: 'ok'
+  });
+  return advice;
+}
+
+function renderPrepReport(report) {
+  document.getElementById('prepCountFiles').textContent = String(report.files.length);
+  document.getElementById('prepCountDirs').textContent = String(report.dirCount);
+  document.getElementById('prepCountDup').textContent = String(report.duplicates.length);
+  document.getElementById('prepCountRisk').textContent = String(report.archives.length + report.longPdfs.length);
+  const advice = summarizePrepAdvice(report);
+  const adviceList = document.getElementById('prepAdviceList');
+  adviceList.innerHTML = advice.map(function(item) {
+    const dotClass = item.level === 'warn' ? 'warn' : item.level === 'muted' ? 'muted' : '';
+    return '<div class="prep-item">'
+      + '<div class="prep-item-title">' + item.title + '</div>'
+      + '<div class="prep-item-meta">' + item.meta + '</div>'
+      + '<div class="prep-status"><span class="prep-dot ' + dotClass + '"></span>'
+      + (item.level === 'warn' ? '建议先处理' : item.level === 'muted' ? '等待材料' : '可直接执行')
+      + '</div></div>';
+  }).join('');
+  if (report.archiveInsights && report.archiveInsights.length) {
+    adviceList.innerHTML += '<div class="prep-item"><div class="prep-item-title">压缩包风险明细</div><div class="prep-item-meta">'
+      + report.archiveInsights.map(function(item) {
+        return '- ' + item.path + '：' + item.label;
+      }).join('<br>')
+      + '</div><div class="prep-status"><span class="prep-dot warn"></span>先看这里，再决定是否直接整理</div></div>';
+  }
+  flashPrepPanel('prepAdviceList');
+
+  const bankGroups = ['广发', '建设', '民生', '招商', '农业', '工商', '中国银行', '交通', '邮储', '平安', '上海银行', '未归类'].map(function(bank) {
+    const count = report.files.filter(function(file) { return detectBankFromPath(file.name, report.bankHints) === bank; }).length;
+    return count ? ('├── ' + bank + ' / ' + count + ' 份') : '';
+  }).filter(Boolean).join('\n');
+  const structureText = [
+    '建议生成目录：',
+    report.rootLabel + '_整理后/',
+    '├── 01_已识别银行/',
+    '├── 99_未识别材料/',
+    '└── 00_说明区/',
+    '',
+    '当前识别分布：',
+    bankGroups || '├── 暂无可分类材料',
+    '',
+    '首轮建议：',
+    '- 先送 Excel / CSV / 少量关键 PDF',
+    '- 压缩包先解压',
+    '- 重复材料先去重',
+    '- 超长 PDF 单独第二轮处理'
+  ].join('\n');
+  document.getElementById('prepStructureHint').textContent = structureText;
+}
+
+function renderPrepOrganizeResult(result) {
+  if (!result || !result.ok) return;
+  lastPrepOrganizeResult = result;
+  const adviceList = document.getElementById('prepAdviceList');
+  if (adviceList) {
+    const extractedText = result.extractedArchives && result.extractedArchives.length
+      ? ('<br>已自动解压：' + result.extractedArchives.length + ' 份')
+      : '<br>已自动解压：0 份';
+    const failedZipText = result.archiveFailures && result.archiveFailures.length
+      ? ('<br>待人工处理压缩包：' + result.archiveFailures.length + ' 份')
+      : '<br>待人工处理压缩包：0 份';
+    const failureDetails = result.archiveFailures && result.archiveFailures.length
+      ? ('<br><br>压缩包异常：<br>' + result.archiveFailures.map(function(item) {
+          return '- ' + item.archive + '：' + (item.label || '解压失败');
+        }).join('<br>'))
+      : '';
+    adviceList.innerHTML = '<div class="prep-item">'
+      + '<div class="prep-item-title">整理目录已生成</div>'
+      + '<div class="prep-item-meta">目录名称：' + result.targetDirName
+      + '<br>共享路径：' + (result.sharePath || result.targetDir)
+      + '<br>已复制可送审材料：' + result.copiedCount + ' 份'
+      + extractedText
+      + failedZipText
+      + '<br>已跳过疑似重复材料：' + ((result.skippedDuplicates && result.skippedDuplicates.length) || 0) + ' 份'
+      + failureDetails
+      + '</div>'
+      + (function() {
+          var bankSummary = {};
+          (result.copied || []).forEach(function(item) {
+            if (!item.bankName || item.bankName === '未识别银行') return;
+            bankSummary[item.bankName] = (bankSummary[item.bankName] || 0) + 1;
+          });
+          var bankNames = Object.keys(bankSummary);
+          lastOrganizedBanks = bankSummary;
+          lastOrganizedDirName = result.targetDirName;
+          if (!bankNames.length) return '<div class="prep-status"><span class="prep-dot"></span>整理完成，请手动提交任务</div>';
+          var bankLine = '识别到 ' + bankNames.length + ' 家银行：' + bankNames.map(function(b){ return b + '（' + bankSummary[b] + '个文件）'; }).join('、');
+          return '<div class="prep-status"><span class="prep-dot"></span>' + bankLine + '</div>'
+            + '<div style="margin-top:10px"><button class="btn btn-primary" id="batchAuditBtn" onclick="startBatchAudit()">一键开始审计（' + bankNames.length + '家银行）▶</button></div>';
+        })()
+      + '</div>';
+  }
+  document.getElementById('prepStructureHint').textContent = [
+    '已生成整理后目录：',
+    result.targetDirName + '/',
+    '',
+    '共享路径：',
+    result.sharePath || result.targetDir,
+    '',
+    '下一步：',
+    '1. 回到“任务执行”',
+    '2. 在共享目录中进入这个整理后目录',
+    '3. 选择其中材料，再点“生成单案件结果”',
+    '',
+    '压缩包提醒：',
+    result.archiveFailures && result.archiveFailures.length
+      ? result.archiveFailures.map(function(item) {
+          return '- ' + item.archive + '：' + (item.hint || item.label || '请人工处理');
+        }).join('\n')
+      : '- 当前无需要人工处理的压缩包'
+  ].join('\n');
+  flashPrepPanel('prepAdviceList', true);
+  flashPrepPanel('prepStructureHint');
+}
+
+function setPrepButtonState(buttonId, state, busyText, idleText, doneText) {
+  const btn = document.getElementById(buttonId);
+  if (!btn) return;
+  btn.classList.remove('busy', 'done');
+  btn.disabled = false;
+  if (state === 'busy') {
+    btn.disabled = true;
+    btn.classList.add('busy');
+    if (busyText) btn.textContent = busyText;
+    return;
+  }
+  if (state === 'done') {
+    btn.classList.add('done');
+    if (doneText) btn.textContent = doneText;
+    setTimeout(function() {
+      btn.classList.remove('done');
+      btn.textContent = idleText;
+    }, 1800);
+    return;
+  }
+  btn.textContent = idleText;
+}
+
+function setPrepActiveAction(action) {
+  prepActiveAction = action || '';
+  const scanBtn = document.getElementById('prepScanBtn');
+  const organizeBtn = document.getElementById('prepOrganizeBtn');
+  if (scanBtn) scanBtn.classList.toggle('active', prepActiveAction === 'scan');
+  if (organizeBtn) organizeBtn.classList.toggle('active', prepActiveAction === 'organize');
+}
+
+function flashPrepPanel(elementId, scrollIntoView) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.classList.remove('panel-flash');
+  void el.offsetWidth;
+  el.classList.add('panel-flash');
+  setTimeout(function() {
+    el.classList.remove('panel-flash');
+  }, 1500);
+  if (scrollIntoView) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function buildPrepReport() {
+  const mounted = Array.isArray(window.mountedFiles) ? window.mountedFiles.slice() : [];
+  const filesOnly = mounted.filter(function(item) { return !item.isDir; });
+  const baseMap = new Map();
+  let dirCount = 0;
+  mounted.forEach(function(item) {
+    if (item.isDir) dirCount += 1;
+    if (!item.isDir) {
+      const base = normalizeMountedPath(item.name).split('/').pop();
+      if (!baseMap.has(base)) baseMap.set(base, []);
+      baseMap.get(base).push(item);
+    }
+  });
+  const duplicates = Array.from(baseMap.entries()).filter(function(entry) {
+    return entry[1].length > 1;
+  }).map(function(entry) {
+    return { base: entry[0], count: entry[1].length, files: entry[1] };
+  });
+  const archives = filesOnly.filter(function(item) {
+    return /\.(zip|rar|7z|tar|gz)$/i.test(item.name || '');
+  });
+  const longPdfs = filesOnly.filter(function(item) {
+    const name = item.name || '';
+    return /\.pdf$/i.test(name) && /meger|merge|流水|交易明细/i.test(name);
+  });
+  const rootLabel = ((document.getElementById('mountPath') || {}).value || '当前材料')
+    .split('/')
+    .filter(Boolean)
+    .pop() || '当前材料';
+  const bankHints = buildPrepBankHints(filesOnly);
+  return {
+    files: filesOnly,
+    dirCount: dirCount,
+    duplicates: duplicates,
+    archives: archives,
+    longPdfs: longPdfs,
+    rootLabel: rootLabel,
+    bankHints: bankHints,
+    archiveInsights: lastPrepScanReport && Array.isArray(lastPrepScanReport.archiveInsights)
+      ? lastPrepScanReport.archiveInsights
+      : []
+  };
+}
+
+function runMaterialPrep() {
+  if (prepScanBusy) return;
+  setPrepActiveAction('scan');
+  prepScanBusy = true;
+  setPrepButtonState('prepScanBtn', 'busy', '扫描中...', '扫描当前挂载材料', '扫描完成');
+  if (!Array.isArray(window.mountedFiles) || !window.mountedFiles.length) {
+    addLog('INFO', '材料整理：正在读取当前挂载目录...');
+    restoreMountedState().then(function(ok) {
+      if (!ok || !Array.isArray(window.mountedFiles) || !window.mountedFiles.length) {
+        addLog('WARN', '材料整理：当前没有可扫描的挂载材料，请先挂载共享目录');
+        const adviceList = document.getElementById('prepAdviceList');
+        if (adviceList) {
+          adviceList.innerHTML = '<div class="prep-item"><div class="prep-item-title">未检测到当前挂载材料</div><div class="prep-item-meta">请先回到“存储挂载”完成挂载，再回来扫描。现在不会自动跳页了，避免你被打断。</div><div class="prep-status"><span class="prep-dot warn"></span>请先挂载</div></div>';
+        }
+        prepScanBusy = false;
+        setPrepButtonState('prepScanBtn', 'idle', '扫描中...', '扫描当前挂载材料', '扫描完成');
+        return;
+      }
+      prepScanBusy = false;
+      setPrepButtonState('prepScanBtn', 'idle', '扫描中...', '扫描当前挂载材料', '扫描完成');
+      runMaterialPrep();
+    });
+    return;
+  }
+  Promise.resolve()
+    .then(function() {
+      if (!lastPrepScanReport || !lastPrepScanReport.ok) {
+        return restoreMountedState().then(function() { return lastPrepScanReport; });
+      }
+      return lastPrepScanReport;
+    })
+    .then(function(data) {
+      if (data && data.ok) {
+        lastPrepScanReport = data;
+      }
+      lastPrepReport = buildPrepReport();
+      renderPrepReport(lastPrepReport);
+      addLog('INFO', '材料整理：已完成当前挂载目录扫描');
+      if (lastPrepReport.duplicates.length) {
+        addLog('WARN', '材料整理：发现 ' + lastPrepReport.duplicates.length + ' 组疑似重复材料');
+      }
+      if (lastPrepReport.archives.length) {
+        addLog('WARN', '材料整理：发现 ' + lastPrepReport.archives.length + ' 个压缩包，建议先解压');
+      }
+      if (lastPrepReport.archiveInsights && lastPrepReport.archiveInsights.length) {
+        var pw = lastPrepReport.archiveInsights.filter(function(item) { return item.code === 'password_required'; }).length;
+        var ready = lastPrepReport.archiveInsights.filter(function(item) { return item.code === 'auto_extract_ready'; }).length;
+        if (pw) addLog('WARN', '材料整理：发现 ' + pw + ' 个疑似带密码压缩包');
+        if (ready) addLog('INFO', '材料整理：发现 ' + ready + ' 个可自动解压压缩包');
+      }
+      if (lastPrepReport.longPdfs.length) {
+        addLog('WARN', '材料整理：发现 ' + lastPrepReport.longPdfs.length + ' 个疑似超长 PDF，建议第二轮单独处理');
+      }
+      prepScanBusy = false;
+      setPrepButtonState('prepScanBtn', 'done', '扫描中...', '扫描当前挂载材料', '扫描完成');
+    })
+    .catch(function(e) {
+      addLog('WARN', '材料整理：扫描失败 - ' + e.message);
+      prepScanBusy = false;
+      setPrepButtonState('prepScanBtn', 'idle', '扫描中...', '扫描当前挂载材料', '扫描完成');
+    });
+}
+
+var lastOrganizedBanks = {};
+var lastOrganizedDirName = '';
+
+function organizeMountedMaterials() {
+  if (prepOrganizeBusy) return;
+  setPrepActiveAction('organize');
+  prepOrganizeBusy = true;
+  setPrepButtonState('prepOrganizeBtn', 'busy', '整理中...', '生成整理目录', '整理完成');
+  addLog('INFO', '材料整理：开始生成整理后目录');
+  fetch('/api/material-prep-organize', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ sourceSubDir: (document.getElementById('sourceSubDirInput').value || '').trim() })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (!data || !data.ok) {
+      addLog('WARN', '材料整理：生成整理目录失败 - ' + ((data && data.error) || '未知错误'));
+      prepOrganizeBusy = false;
+      setPrepButtonState('prepOrganizeBtn', 'idle', '整理中...', '生成整理目录', '整理完成');
+      return;
+    }
+    renderPrepOrganizeResult(data);
+    addLog('INFO', '材料整理：已生成整理目录 ' + data.targetDirName);
+    if (data.skippedDuplicates && data.skippedDuplicates.length) {
+      addLog('WARN', '材料整理：已自动跳过 ' + data.skippedDuplicates.length + ' 份疑似重复材料');
+    }
+    prepOrganizeBusy = false;
+    setPrepButtonState('prepOrganizeBtn', 'done', '整理中...', '生成整理目录', '整理完成');
+  })
+  .catch(function(e) {
+    addLog('WARN', '材料整理：生成整理目录失败 - ' + e.message);
+    prepOrganizeBusy = false;
+    setPrepButtonState('prepOrganizeBtn', 'idle', '整理中...', '生成整理目录', '整理完成');
+  });
+}
+
+function startBatchAudit() {
+  if (!lastOrganizedDirName) { addLog('WARN', '批量审计：请先完成材料整理'); return; }
+  var customerName = '';
+  var nameInput = document.getElementById('customerNameInput');
+  if (nameInput && nameInput.value.trim()) customerName = nameInput.value.trim();
+  var btn = document.getElementById('batchAuditBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '提交中...'; }
+  addLog('INFO', '批量审计：正在提交 ' + Object.keys(lastOrganizedBanks).join('、') + '...');
+  fetch('/api/batch-task-from-organized', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ organizedDirName: lastOrganizedDirName, customerName: customerName })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (!data.ok) { addLog('WARN', '批量审计提交失败：' + (data.error || '未知')); if (btn) { btn.disabled = false; btn.textContent = '重试'; } return; }
+    addLog('INFO', '已提交 ' + data.tasks.length + ' 个任务：');
+    data.tasks.forEach(function(t) {
+      addLog('INFO', '  ▶ ' + t.bank + '：' + t.taskId + '（' + t.fileCount + '个文件）');
+    });
+    if (btn) { btn.textContent = '✅ 已提交'; }
+    setTimeout(function() { switchTab('task'); }, 800);
+  })
+  .catch(function(e) {
+    addLog('WARN', '批量审计提交失败：' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = '重试'; }
+  });
+}
+
+function syncPrepToAssistant() {
+  if (!lastPrepReport) {
+    runMaterialPrep();
+  }
+  if (!lastPrepReport) return;
+  const hints = [];
+  if (lastPrepReport.archives.length) hints.push('先解压压缩包 ' + lastPrepReport.archives.length + ' 份');
+  if (lastPrepReport.duplicates.length) hints.push('去重 ' + lastPrepReport.duplicates.length + ' 组重复材料');
+  if (lastPrepReport.longPdfs.length) hints.push('将超长 PDF 单独拆出第二轮处理');
+  hints.push('按 已识别银行 / 未识别材料 生成整理后目录');
+  switchTab('chat');
+  const input = document.getElementById('chatInput');
+  if (input) {
+    input.value = '请根据当前材料整理结果，帮我输出一份可执行的整理清单：' + hints.join('；');
+    input.focus();
+  }
+}
+
+function renderCaseSummaryScan(data) {
+  lastSummaryScan = data;
+  var items = Array.isArray(data && data.items) ? data.items : [];
+  selectedSummaryDirs = items.filter(function(item) {
+    return item.reportCount > 0 && item.scheduleCount > 0;
+  }).map(function(item) { return item.dirName; });
+  document.getElementById('summaryCountDirs').textContent = String(items.length);
+  document.getElementById('summaryCountReports').textContent = String(items.filter(function(item) { return item.reportCount > 0; }).length);
+  document.getElementById('summaryCountSheets').textContent = String(items.filter(function(item) { return item.scheduleCount > 0; }).length);
+  document.getElementById('summaryCountRisk').textContent = String(items.filter(function(item) { return !item.reportCount || !item.scheduleCount; }).length);
+
+  var list = document.getElementById('summaryList');
+  if (!items.length) {
+    list.innerHTML = '<div class="prep-item"><div class="prep-item-title">当前未发现历史案件结果目录</div><div class="prep-item-meta">请先在共享目录里确认存在 `AI审计结果_*` 目录，再回来扫描。</div><div class="prep-status"><span class="prep-dot warn"></span>暂无可汇总案件</div></div>';
+    return;
+  }
+
+  list.innerHTML = items.map(function(item) {
+    var risk = (!item.reportCount || !item.scheduleCount);
+    var checked = selectedSummaryDirs.indexOf(item.dirName) >= 0;
+    return '<div class="prep-item">'
+      + '<div class="prep-item-title"><label style="display:flex;gap:8px;align-items:center;cursor:pointer;"><input type="checkbox" ' + (checked ? 'checked' : '') + ' onchange="toggleSummaryDir(' + "'" + escapeHtml(item.dirName).replace(/'/g, '&#39;') + "'" + ', this.checked)"><span>' + item.dirName + '</span></label></div>'
+      + '<div class="prep-item-meta">'
+      + '共享路径：' + escapeHtml(item.sharePath || item.resultDir) + '<br>'
+      + '文件数：' + item.totalFiles + '；附表/表格：' + item.scheduleCount + '；报告：' + item.reportCount + '<br>'
+      + '主报告：' + escapeHtml(item.primaryReport || '未识别')
+      + '</div>'
+      + '<div class="prep-status"><span class="prep-dot ' + (risk ? 'warn' : '') + '"></span>' + (risk ? '建议先人工复核' : '可进入总汇总') + '</div>'
+      + '</div>';
+  }).join('');
+
+  document.getElementById('summaryHint').textContent = [
+    '建议总汇总顺序：',
+    '1. 先汇总附表，再汇总报告',
+    '2. 优先选择“附表和报告都齐”的结果目录',
+    '3. 缺报告或缺附表的案件先回原案件补齐',
+    '',
+    '当前建议优先汇总：',
+    items.filter(function(item) { return item.reportCount > 0 && item.scheduleCount > 0; }).slice(0, 5).map(function(item) {
+      return '- ' + item.dirName;
+    }).join('\n') || '- 暂无完全齐套案件'
+  ].join('\n');
+  flashPrepPanel('summaryList', true);
+}
+
+function toggleSummaryDir(dirName, checked) {
+  if (checked) {
+    if (selectedSummaryDirs.indexOf(dirName) < 0) selectedSummaryDirs.push(dirName);
+  } else {
+    selectedSummaryDirs = selectedSummaryDirs.filter(function(name) { return name !== dirName; });
+  }
+}
+
+function renderSummaryBuildResult(result) {
+  lastSummaryBuildResult = result;
+  var list = document.getElementById('summaryList');
+  if (list) {
+    list.innerHTML = '<div class="prep-item">'
+      + '<div class="prep-item-title">汇总目录已生成</div>'
+      + '<div class="prep-item-meta">'
+      + '目录名称：' + result.targetDirName + '<br>'
+      + '共享路径：' + escapeHtml(result.sharePath || result.targetDir) + '<br>'
+      + '已纳入案件：' + result.selectedCount + ' 个<br>'
+      + '已收拢附表/表格：' + result.copiedSheetCount + ' 份<br>'
+      + '已收拢报告：' + result.copiedReportCount + ' 份'
+      + (result.ledgerDraft && result.ledgerDraft.ok ? ('<br>已生成总台账底稿：' + (result.ledgerDraft.mergedRowCount || 0) + ' 行') : '')
+      + '</div>'
+      + '<div class="prep-status"><span class="prep-dot"></span>可直接进入共享目录继续总汇总</div>'
+      + '</div>';
+  }
+  document.getElementById('summaryHint').textContent = [
+    '已生成汇总目录：',
+    result.targetDirName + '/',
+    '',
+    '共享路径：',
+    result.sharePath || result.targetDir,
+    '',
+    '当前版本已完成：',
+    '- 自动收拢附表/表格',
+    '- 自动收拢报告',
+    (result.ledgerDraft && result.ledgerDraft.ok) ? ('- 已生成 03_总台账底稿/总台账底稿.csv（' + (result.ledgerDraft.mergedRowCount || 0) + ' 行）') : '- 本次未生成总台账底稿，请先检查附表文件',
+    '- 自动生成汇总说明与案件清单',
+    '',
+    '下一步：',
+    '1. 先核对 01_附表汇总',
+    '2. 再人工复核 02_报告汇总',
+    '3. 最后产出总报告'
+  ].join('\n');
+  flashPrepPanel('summaryList', true);
+  flashPrepPanel('summaryHint');
+}
+
+function runCaseSummaryScan() {
+  setPrepButtonState('summaryScanBtn', 'busy', '扫描中...', '扫描历史结果目录', '扫描完成');
+  addLog('INFO', '结果汇总：开始扫描历史结果目录');
+  fetch('/api/case-summary-scan')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data || !data.ok) {
+        addLog('WARN', '结果汇总：扫描失败 - ' + ((data && data.error) || '未知错误'));
+        setPrepButtonState('summaryScanBtn', 'idle', '扫描中...', '扫描历史结果目录', '扫描完成');
+        return;
+      }
+      renderCaseSummaryScan(data);
+      addLog('INFO', '结果汇总：已扫描到 ' + ((data.items && data.items.length) || 0) + ' 个历史结果目录');
+      setPrepButtonState('summaryScanBtn', 'done', '扫描中...', '扫描历史结果目录', '扫描完成');
+    })
+    .catch(function(e) {
+      addLog('WARN', '结果汇总：扫描失败 - ' + e.message);
+      setPrepButtonState('summaryScanBtn', 'idle', '扫描中...', '扫描历史结果目录', '扫描完成');
+    });
+}
+
+function buildCaseSummaryBundle() {
+  if (!selectedSummaryDirs.length) {
+    addLog('WARN', '结果汇总：请先勾选至少一个结果目录');
+    return;
+  }
+  setPrepButtonState('summaryBuildBtn', 'busy', '汇总中...', '生成汇总目录', '汇总完成');
+  addLog('INFO', '结果汇总：开始生成汇总目录，已选 ' + selectedSummaryDirs.length + ' 个案件');
+  fetch('/api/case-summary-build', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ dirNames: selectedSummaryDirs })
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data || !data.ok) {
+        addLog('WARN', '结果汇总：生成汇总目录失败 - ' + ((data && data.error) || '未知错误'));
+        setPrepButtonState('summaryBuildBtn', 'idle', '汇总中...', '生成汇总目录', '汇总完成');
+        return;
+      }
+      renderSummaryBuildResult(data);
+      addLog('INFO', '结果汇总：已生成汇总目录 ' + data.targetDirName);
+      setPrepButtonState('summaryBuildBtn', 'done', '汇总中...', '生成汇总目录', '汇总完成');
+    })
+    .catch(function(e) {
+      addLog('WARN', '结果汇总：生成汇总目录失败 - ' + e.message);
+      setPrepButtonState('summaryBuildBtn', 'idle', '汇总中...', '生成汇总目录', '汇总完成');
+    });
+}
+
+function appendAssistantMessage(containerId, msg, role) {
+  const box = document.getElementById(containerId);
+  if (!box) return;
+  const bubble = document.createElement('div');
+  if (role === 'user') {
+    bubble.style.alignSelf = 'flex-end';
+    bubble.style.background = 'var(--green)';
+    bubble.style.color = '#000';
+  } else {
+    bubble.style.alignSelf = 'flex-start';
+    bubble.style.background = 'var(--panel)';
+    bubble.style.border = '1px solid var(--border)';
+    bubble.style.color = 'var(--text)';
+  }
+  bubble.style.padding = '8px 12px';
+  bubble.style.maxWidth = '88%';
+  bubble.style.fontSize = '0.78rem';
+  bubble.style.fontFamily = 'var(--mono)';
+  bubble.style.whiteSpace = 'pre-wrap';
+  bubble.textContent = msg;
+  box.appendChild(bubble);
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendAssistantRequest(message, mode, containerId) {
+  persistCaseContext();
+  return fetch('/api/chat-proxy', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      message: message.replace(/[\u0000-\u001F]/g, ' '),
+      caseId: activeCaseId || '',
+      mode: mode || 'assistant'
+    })
+  }).then(function(r) {
+    return r.json();
+  }).then(function(data) {
+    appendAssistantMessage(containerId, (data && data.reply) || '无回复', 'assistant');
+    addLog('INFO', mode === 'refine' ? '结果微调回复完成' : 'AI回复完成');
+    return data;
+  }).catch(function(e) {
+    appendAssistantMessage(containerId, '请求失败: ' + e.message, 'assistant');
+    return null;
+  });
+}
+
 
 function sendChat() {
   const input = document.getElementById('chatInput');
   const msg = input.value.trim();
   if (!msg) return;
   input.value = '';
-  
-  const messages = document.getElementById('chatMessages');
-  // 用户消息
-  messages.innerHTML += `<div style="align-self:flex-end;background:var(--green);color:#000;padding:8px 12px;max-width:70%;font-size:0.8rem;font-family:var(--mono);">${msg}</div>`;
-  messages.scrollTop = messages.scrollHeight;
-  
-  // 发给墨影
+  appendAssistantMessage('chatMessages', msg, 'user');
   addLog('INFO', 'AI对话: ' + msg.substring(0,30) + '...');
-  fetch('/api/chat-proxy', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({message: msg.replace(/[\u0000-\u001F]/g, ' ')})
-  })
-  .then(r => r.json())
-  .then(data => {
-    messages.innerHTML += `<div style="align-self:flex-start;background:var(--bg-card);border:1px solid var(--border);padding:8px 12px;max-width:80%;font-size:0.8rem;font-family:var(--mono);white-space:pre-wrap;">${data.reply || '无回复'}</div>`;
-    messages.scrollTop = messages.scrollHeight;
-    addLog('INFO', 'AI回复完成');
-  })
-  .catch(e => {
-    messages.innerHTML += `<div style="color:var(--red);font-size:0.75rem;">请求失败: ${e.message}</div>`;
-  });
+  sendAssistantRequest(msg, 'assistant', 'chatMessages');
 }
 
 function clearChat() {
   document.getElementById('chatMessages').innerHTML = '';
+}
+
+function parseAnalysisConditionMeta() {
+  const txt = (document.getElementById('analysisCondition') || {}).value || '';
+  function pick() {
+    for (let i = 0; i < arguments.length; i++) {
+      const key = arguments[i];
+      const m = txt.match(new RegExp(key + '\\s*[=:：]\\s*([^；;\\n]+)'));
+      if (m && m[1]) return m[1].trim();
+    }
+    return '';
+  }
+  const firstFileName = Array.isArray(files) && files.length
+    ? (files[0].name || '').replace(/\.[^.]+$/, '')
+    : '';
+  const caseName = pick('案件名称', '案件名', '项目名称');
+  const customerName = pick('客户名称', '公司名称', '单位名称', '户名') || caseName;
+  const accountNo = pick('交易账号', '账号', '账户', '账户号码');
+  const cardNo = pick('交易卡号', '卡号', '银行卡号');
+  const bankName = pick('开户行', '银行名称', '银行');
+  const fallbackName = firstFileName || (selectedTask === 'case' ? '单案件处理' : '当前任务');
+  const reportBaseName = (customerName || caseName || fallbackName).replace(/[\\/:*?"<>|\s]+/g, '_');
+  const customerKey = reportBaseName.toLowerCase();
+  return {
+    caseName: caseName || fallbackName,
+    customerName: customerName || '',
+    accountNo: accountNo || '',
+    cardNo: cardNo || '',
+    bankName: bankName || '',
+    reportBaseName: reportBaseName || '审计案件',
+    customerKey: customerKey || 'default_customer'
+  };
+}
+
+function extractCaseName() {
+  return parseAnalysisConditionMeta().caseName;
+}
+
+function buildCaseContextPayload() {
+  const meta = parseAnalysisConditionMeta();
+  return {
+    caseName: meta.caseName,
+    customerName: meta.customerName,
+    customerKey: meta.customerKey,
+    accountNo: meta.accountNo,
+    cardNo: meta.cardNo,
+    bankName: meta.bankName,
+    reportBaseName: meta.reportBaseName,
+    primaryReportFile: currentCaseContext.primaryReportFile || '',
+    resultStatus: currentCaseContext.resultStatus,
+    selectedCount: currentCaseContext.selectedCount,
+    strategy: currentCaseContext.strategy,
+    selectedFiles: currentCaseContext.selectedFiles || [],
+    taskType: selectedTask,
+    analysisCondition: (document.getElementById('analysisCondition') || {}).value || '',
+    lastTaskId: currentCaseContext.lastTaskId || '',
+    resultDir: currentCaseContext.resultDir || '',
+    sharePath: currentCaseContext.sharePath || '',
+    resultFiles: currentCaseContext.resultFiles || []
+  };
+}
+
+function persistCaseContext() {
+  return fetch('/api/case-context', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      caseId: activeCaseId || '',
+      caseContext: buildCaseContextPayload()
+    })
+  }).then(function(r) {
+    return r.json();
+  }).then(function(data) {
+    if (data && data.ok && data.caseId) {
+      activeCaseId = data.caseId;
+    }
+    return data;
+  }).catch(function() {
+    return null;
+  });
+}
+
+function refreshRefinePanel() {
+  const tags = document.getElementById('refineTags');
+  if (!tags) return;
+  tags.innerHTML = ''
+    + '<div class="refine-tag">当前案件：' + currentCaseContext.caseName + '</div>'
+    + '<div class="refine-tag">客户：' + (currentCaseContext.customerName || '未填写') + '</div>'
+    + '<div class="refine-tag">结果状态：' + currentCaseContext.resultStatus + '</div>'
+    + '<div class="refine-tag">本次材料：' + currentCaseContext.selectedCount + ' 个</div>'
+    + '<div class="refine-tag">处理策略：' + currentCaseContext.strategy + '</div>'
+    + '<div class="refine-tag">案件ID：' + (activeCaseId || '未分配') + '</div>';
+}
+
+function focusRefineToAssistant() {
+  switchTab('chat');
+  const input = document.getElementById('chatInput');
+  if (input) {
+    input.value = '继续处理当前案件：' + currentCaseContext.caseName + '。当前结果状态：' + currentCaseContext.resultStatus + '。';
+    input.focus();
+  }
+}
+
+function sendRefine() {
+  const input = document.getElementById('refineInput');
+  if (!input) return;
+  const msg = input.value.trim();
+  if (!msg) return;
+  if (refineWritebackBusy) return;
+  input.value = '';
+  refineWritebackBusy = true;
+  const sendBtn = document.querySelector('.refine-send-btn');
+  if (sendBtn) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = '微调处理中...';
+  }
+  setRefineStatus('running', '系统正在基于当前案件生成新版本，并回写共享结果目录。');
+  addLog('INFO', '结果微调请求: ' + msg.substring(0, 40));
+  addCaseTimeline('微调请求', msg);
+  appendAssistantMessage('refineMessages', msg, 'user');
+  appendAssistantMessage('refineMessages', '正在生成微调版本，并尝试回写到共享文件夹...', 'assistant');
+  sendAssistantRequest('基于当前案件上下文继续处理：' + msg, 'refine', 'refineMessages').then(function() {
+    return fetch('/api/refine-writeback', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        caseId: activeCaseId || '',
+        instruction: msg
+      })
+    }).then(function(r) {
+      return r.json();
+    }).then(function(data) {
+      if (!data || !data.ok) {
+        throw new Error((data && data.error) || '微调回写失败');
+      }
+      if (data.caseContext) {
+        currentCaseContext = {
+          ...currentCaseContext,
+          ...data.caseContext
+        };
+      } else {
+        currentCaseContext.resultStatus = '已生成微调版本';
+      }
+      if (data.resultDir) currentCaseContext.resultDir = data.resultDir;
+      if (data.sharePath) currentCaseContext.sharePath = data.sharePath;
+      if (data.fileName) {
+        currentCaseContext.resultFiles = Array.from(new Set([...(currentCaseContext.resultFiles || []), data.fileName]));
+      }
+      refreshRefinePanel();
+      renderResultAssets();
+      const writebackMsg = [
+        '微调版本已回写到新的结果目录。',
+        data.versionDirName ? ('新版本目录：' + data.versionDirName) : '',
+        data.sharePath ? ('Windows 目录：' + data.sharePath) : '',
+        data.fileSharePath ? ('报告文件：' + data.fileSharePath) : (data.filePath ? ('文件路径：' + data.filePath) : ''),
+      ].filter(Boolean).join('\n');
+      appendAssistantMessage('refineMessages', writebackMsg, 'assistant');
+      addLog('INFO', '微调版本已写回: ' + (data.versionDirName || data.fileName || 'V2 目录'));
+      addCaseTimeline('微调完成', '生成新版本：' + (data.versionDirName || data.fileName || 'V2'));
+      document.getElementById('dlSub').textContent = data.sharePath
+        ? ('微调版本目录：' + data.sharePath)
+        : '微调版本已写回新的共享结果目录';
+      setRefineStatus('done', '当前已切换到 ' + getCurrentVersionLabel());
+    }).catch(function(e) {
+      appendAssistantMessage('refineMessages', '微调建议已返回，但自动回写失败：' + e.message, 'assistant');
+      addLog('WARN', '微调回写失败: ' + e.message);
+      setRefineStatus('error', '微调建议已返回，但本次未能生成新版本目录。');
+    }).finally(function() {
+      refineWritebackBusy = false;
+      if (sendBtn) {
+        sendBtn.disabled = false;
+        sendBtn.textContent = '发送微调';
+      }
+    });
+  }).catch(function() {
+    refineWritebackBusy = false;
+    setRefineStatus('error', '微调请求未完成，请稍后重试。');
+    if (sendBtn) {
+      sendBtn.disabled = false;
+      sendBtn.textContent = '发送微调';
+    }
+  });
 }
 
 
@@ -1415,7 +3961,8 @@ function toggleMountedFile(idx, el) {
   const cnt = window.selectedMountedFiles.length;
   document.getElementById('selCount').textContent = '已选' + cnt + '个';
   isMounted = cnt > 0;
-  document.getElementById('actionNote').textContent = cnt > 0 ? '已选' + cnt + '个文件 · 点击开始处理' : '请选择要处理的文件';
+  document.getElementById('actionNote').textContent = cnt > 0 ? '已选' + cnt + '个文件 · 点击生成单案件结果（审计附表 + 审计报告）' : '请选择要处理的文件';
+  renderSingleCaseRiskHint(analyzeSingleCaseRisk(getCurrentSelectedEntries()));
 }
 
 function selectAllMounted() {
@@ -1429,7 +3976,8 @@ function selectAllMounted() {
   const cnt = window.selectedMountedFiles.length;
   document.getElementById('selCount').textContent = '已选' + cnt + '个';
   isMounted = true;
-  document.getElementById('actionNote').textContent = '已选' + cnt + '个文件 · 点击开始处理';
+  document.getElementById('actionNote').textContent = '已选' + cnt + '个文件 · 点击生成单案件结果（审计附表 + 审计报告）';
+  renderSingleCaseRiskHint(analyzeSingleCaseRisk(getCurrentSelectedEntries()));
 }
 
 function clearMountedSelection() {
@@ -1443,61 +3991,124 @@ function clearMountedSelection() {
   document.getElementById('selCount').textContent = '已选0个';
   isMounted = false;
   document.getElementById('actionNote').textContent = '请选择要处理的文件';
+  renderSingleCaseRiskHint(analyzeSingleCaseRisk(getCurrentSelectedEntries()));
 }
 
 
 // 恢复上次SMB配置
 window.addEventListener('DOMContentLoaded', function() {
-  const host = sessionStorage.getItem('smb_host');
-  const path = sessionStorage.getItem('smb_path');
-  const pass = sessionStorage.getItem('smb_pass');
-  if (host) document.getElementById('mountHost').value = host;
-  if (path) document.getElementById('mountPath').value = path;
-  if (pass) document.querySelector('#storageSection input[type=password]').value = pass;
+  loadRecommendedMount();
+  renderDeploymentProfile();
+  restoreMountedState();
+  setPrepActiveAction(prepActiveAction);
 });
 
 
-function pollTasks(taskIds, attempts) {
-  if (attempts > 30) {
+function pollTasks(taskIds, attempts, startedAt) {
+  const pollStartedAt = startedAt || Date.now();
+  if (attempts > 180) {
     addLog('WARN', '超时：任务超过15分钟未完成');
     return;
   }
   Promise.all(taskIds.map(function(id) {
     return fetch('/api/task-status?id=' + id).then(r => r.json());
   })).then(function(results) {
-    const done = results.filter(r => r.task && r.task.status === 'done');
-    const failed = results.filter(r => r.task && r.task.status === 'failed');
-    const running = results.filter(r => r.task && r.task.status === 'running');
+    const done = results.filter(r => r.status === 'done');
+    const failed = results.filter(r => r.status === 'failed');
+    const running = results.filter(r => r.status === 'running' || r.status === 'pending');
+    const missing = results.filter(r => r.error === 'not_found');
     
-    const pct = Math.min(30 + Math.round(done.length / taskIds.length * 60), 90);
+    const elapsedSec = Math.max(0, Math.floor((Date.now() - pollStartedAt) / 1000));
+    var pct = 25;
+    if (done.length > 0) {
+      pct = 100;
+    } else if (running.length > 0) {
+      if (elapsedSec < 30) pct = 28;
+      else if (elapsedSec < 90) pct = 36;
+      else if (elapsedSec < 180) pct = 49;
+      else if (elapsedSec < 360) pct = 61;
+      else if (elapsedSec < 600) pct = 72;
+      else pct = 78;
+    } else if (missing.length > 0) {
+      pct = 35;
+    }
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressPct').textContent = pct + '%';
-    document.getElementById('progressLabel').textContent = '完成 ' + done.length + '/' + taskIds.length + ' 个任务...';
+    if (running.length > 0) {
+      document.getElementById('progressLabel').textContent = elapsedSec >= 240
+        ? ('后端仍在处理中，当前更可能在跑 OCR / 长 PDF。已等待约 ' + elapsedSec + ' 秒')
+        : ('后端处理中... 已等待约 ' + elapsedSec + ' 秒');
+    } else if (missing.length > 0) {
+      document.getElementById('progressLabel').textContent = '任务状态暂不可用，请查看审计日志';
+    } else {
+      document.getElementById('progressLabel').textContent = '完成 ' + done.length + '/' + taskIds.length + ' 个任务...';
+    }
 
     if (failed.length > 0) {
       failed.forEach(function(r) {
-        addLog('WARN', '任务失败: ' + (r.task.error || '未知错误'));
+        addLog('WARN', '任务失败: ' + (r.error || '未知错误'));
       });
     }
 
     if (done.length + failed.length === taskIds.length) {
       // 全部完成
+      lastTaskResults = done.slice();
       document.getElementById('progressFill').style.width = '100%';
       document.getElementById('progressPct').textContent = '100%';
       document.getElementById('progressLabel').textContent = '全部完成！';
       addLog('INFO', '处理完成 · ' + done.length + '个成功 · ' + failed.length + '个失败');
+      const primaryResult = getPrimaryResultMeta();
+      const finishedTaskType = (primaryResult && primaryResult.result && primaryResult.result.taskType) || selectedTask || 'case';
+      currentCaseContext.resultStatus = failed.length > 0
+        ? '部分完成'
+        : finishedTaskType === 'invoice'
+        ? '已生成票据台账'
+        : '已生成附表与报告';
       done.forEach(function(r) {
-        if (r.task.result && r.task.result.files) {
-          addLog('DATA', '结果文件: ' + r.task.result.files.join(', '));
-          addLog('INFO', r.task.result.message || '结果已回传到共享目录');
-        }
+        addLog('INFO', (r.result && r.result.message) || '结果已写回共享目录的 AI审计结果_时间戳 文件夹');
       });
       document.getElementById('resultArea').classList.add('show');
+      document.getElementById('downloadBar').classList.add('show');
+      document.getElementById('dlInfo').textContent = finishedTaskType === 'invoice'
+        ? ('票据台账完成 — ' + done.length + ' 个任务成功，' + failed.length + ' 个失败')
+        : ('处理完成 — ' + done.length + ' 个任务成功，' + failed.length + ' 个失败');
+      const outDir = primaryResult && primaryResult.result ? primaryResult.result.outDir : '';
+      const sharePath = primaryResult && primaryResult.result ? primaryResult.result.sharePath : '';
+      const resultFiles = primaryResult && primaryResult.result && Array.isArray(primaryResult.result.files)
+        ? primaryResult.result.files
+        : [];
+      currentCaseContext.resultDir = outDir || currentCaseContext.resultDir || '';
+      currentCaseContext.sharePath = sharePath || currentCaseContext.sharePath || '';
+      currentCaseContext.resultFiles = resultFiles.slice();
+      addCaseTimeline('结果生成', '已生成结果目录：' + (sharePath || outDir || '未记录'));
+      document.getElementById('dlSub').textContent = sharePath
+        ? ('Windows 打开路径：' + sharePath)
+        : outDir
+        ? ('结果目录：' + outDir)
+        : '结果已写回共享目录，可点击查看本次产物';
+      renderResultAssets();
+      const refinePanel = document.getElementById('refinePanel');
+      if (refinePanel) refinePanel.classList.add('show');
+      const refineMessages = document.getElementById('refineMessages');
+      if (refineMessages) {
+        refineMessages.innerHTML = '';
+        appendAssistantMessage(
+          'refineMessages',
+          failed.length > 0
+            ? '本次任务已结束，但存在失败项。你可以继续在这里补充说明、改写成功结果，或让我帮你梳理失败原因。'
+            : '本次结果已经绑定到当前案件。你可以直接在这里继续改写报告、筛选异常交易或补充说明。'
+              + (outDir ? '\n结果目录：' + outDir : '')
+              + (resultFiles.length ? '\n产物：' + resultFiles.join(' / ') : ''),
+          'assistant'
+        );
+      }
+      refreshRefinePanel();
+      persistCaseContext();
       return;
     }
 
-    // 还有任务在跑，30秒后再查
-    setTimeout(function() { pollTasks(taskIds, attempts + 1); }, 30000);
+    // 还有任务在跑，5秒后再查
+    setTimeout(function() { pollTasks(taskIds, attempts + 1, pollStartedAt); }, 5000);
   });
 }
 
@@ -1505,46 +4116,36 @@ function pollTasks(taskIds, attempts) {
 function mountStorage() {
   const host = document.getElementById('mountHost').value;
   const sharePath = document.getElementById('mountPath').value || '';
-  const pass = document.querySelector('#storageSection input[type=password]').value || '';
-  // 保存到sessionStorage
-  sessionStorage.setItem('smb_host', host);
-  sessionStorage.setItem('smb_path', sharePath);
-  sessionStorage.setItem('smb_pass', pass);
+  const user = document.getElementById('mountUser').value || '';
+  const pass = (document.getElementById('mountPassword') || {}).value || '';
+  saveClientMountDraft(host, sharePath, user, pass);
   if (!host) { addLog('WARN', '请输入服务器地址'); return; }
+  setMountTransitionState(host, sharePath);
   addLog('INFO', '正在挂载 SMB://' + host + sharePath + '...');
   fetch('/api/smb-mount', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({host, share: sharePath.replace(/^\//, ''), user: document.getElementById("mountUser").value || "Administrator", pass})
+    body: JSON.stringify({host, share: sharePath.replace(/^\//, ''), user: user || "Administrator", pass})
   })
   .then(r => r.json())
   .then(data => {
-    if (!data.ok) { addLog('WARN', '挂载失败: ' + (data.error || '未知')); return; }
-    isMounted = true;
-    window.mountedFiles = data.files || [];
+    if (!data.ok) {
+      addLog('WARN', '挂载失败: ' + (data.error || '未知'));
+      setMountFailedState(host, sharePath, data.error || '未知错误');
+      return;
+    }
+    if (!isPublicEntryMode() && lastClientNetworkHint && lastClientNetworkHint.clientIp && host === lastClientNetworkHint.clientIp) {
+      saveCurrentDeviceMountProfile(lastClientNetworkHint, sharePath, user || 'Administrator');
+    }
+    applyMountedState(host, sharePath, data.files || []);
     addLog('INFO', '挂载成功: SMB://' + host + sharePath);
     addLog('DATA', '扫描目录: 发现 ' + window.mountedFiles.length + ' 个文件');
     addLog('INFO', '只读模式，数据未离开客户设备');
-    const s = document.getElementById('mountStatus');
-    s.className = 'mount-status connected';
-    s.innerHTML = '<span class="dot"></span> 已挂载 SMB://' + host + sharePath + ' · ' + window.mountedFiles.length + '个文件';
-    document.getElementById('actionNote').textContent = '存储已挂载，可开始处理';
-    const list = document.getElementById('fileList');
-    window.selectedMountedFiles = [];
-    const fileItems = window.mountedFiles.filter(function(f){ return !f.isDir; });
-    list.innerHTML = '<div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">' +
-      '<button onclick="selectAllMounted()" style="font-size:0.72rem;padding:3px 10px;background:var(--bg);border:1px solid var(--green);color:var(--green);cursor:pointer;">全选</button>' +
-      '<button onclick="clearMountedSelection()" style="font-size:0.72rem;padding:3px 10px;background:var(--bg);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;">取消全选</button>' +
-      '<span style="font-size:0.72rem;color:var(--text-dim);" id="selCount">已选0个</span>' +
-      '</div>' +
-      fileItems.map(function(f, i) {
-        return '<div class="file-item" id="mf_' + i + '" onclick="toggleMountedFile(' + i + ',this)" style="cursor:pointer;">' +
-          '<span>📄</span><span class="f-name">' + f.name + '</span>' +
-          '<span class="f-size">' + formatBytes(f.size) + '</span>' +
-          '<span class="sel-mark" style="margin-left:auto;color:var(--text-dim);">○</span></div>';
-      }).join('');
   })
-  .catch(function(e) { addLog('WARN', '请求失败: ' + e.message); });
+  .catch(function(e) {
+    addLog('WARN', '请求失败: ' + e.message);
+    setMountFailedState(host, sharePath, e.message);
+  });
 }
 
 function testConnection() {
@@ -1553,5 +4154,6 @@ function testConnection() {
   setTimeout(function() { addLog('INFO', '网络层可达: ' + host); }, 600);
 }
 </script>
-</body>
-</html>
+
+
+</body></html>
