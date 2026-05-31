@@ -3531,13 +3531,50 @@ function startBatchAudit() {
     data.tasks.forEach(function(t) {
       addLog('INFO', '  ▶ ' + t.bank + '：' + t.taskId + '（' + t.fileCount + '个文件）');
     });
-    if (btn) { btn.textContent = '✅ 已提交'; }
-    setTimeout(function() { switchTab('task'); }, 800);
+    if (btn) { btn.textContent = '✅ 已提交 ' + data.tasks.length + ' 个任务'; }
+    startBatchProgressPolling(data.tasks);
   })
   .catch(function(e) {
     addLog('WARN', '批量审计提交失败：' + e.message);
     if (btn) { btn.disabled = false; btn.textContent = '重试'; }
   });
+}
+
+function startBatchProgressPolling(tasks) {
+  var btn = document.getElementById('batchAuditBtn');
+  if (!btn) return;
+  var prog = document.getElementById('batchProgressBox');
+  if (!prog) {
+    prog = document.createElement('div');
+    prog.id = 'batchProgressBox';
+    prog.style.cssText = 'margin-top:12px;padding:10px 12px;border:1px solid var(--border);font-family:var(--mono);font-size:0.78rem;';
+    btn.parentNode.appendChild(prog);
+  }
+  function render(statuses) {
+    var allDone = true;
+    var html = '<div style="color:var(--text-dim);margin-bottom:8px;">// 批量审计进度</div>';
+    statuses.forEach(function(t) {
+      var icon = t.status === 'done' ? '✅' : t.status === 'failed' ? '❌' : '⏳';
+      var label = t.status === 'done' ? '完成 → ' + (t.outDir ? t.outDir.split('/').pop() : '') :
+                  t.status === 'failed' ? '失败' : '处理中…';
+      html += '<div style="padding:3px 0;">' + icon + ' ' + t.bank + '&emsp;' + label + '</div>';
+      if (t.status !== 'done' && t.status !== 'failed') allDone = false;
+    });
+    prog.innerHTML = html;
+    return allDone;
+  }
+  var statuses = tasks.map(function(t) { return { bank: t.bank, taskId: t.taskId, status: 'running', outDir: '' }; });
+  render(statuses);
+  var timer = setInterval(function() {
+    Promise.all(tasks.map(function(t) {
+      return fetch('/api/task-status?id=' + t.taskId)
+        .then(function(r) { return r.json(); })
+        .then(function(d) { return { bank: t.bank, taskId: t.taskId, status: d.status || 'running', outDir: (d.result && d.result.outDir) || '' }; })
+        .catch(function() { return { bank: t.bank, taskId: t.taskId, status: 'running', outDir: '' }; });
+    })).then(function(results) {
+      if (render(results)) clearInterval(timer);
+    });
+  }, 3000);
 }
 
 function syncPrepToAssistant() {
